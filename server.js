@@ -46,7 +46,7 @@ app.use('/api', (req, res, next) => {
                 success: false,
                 error: true,
                 message: "Email ini belum melakukan pembayaran Rp 5.000 di SociaBuzz.",
-                payment_url: "https://sociabuzz.com/jawaaaaaa/tribe"
+                payment_url: "https://sociabuzz.com/jawaaaaaaa/tribe"
             });
         }
     }
