@@ -173,16 +173,36 @@ const say = (id, txt, ok) => {
 const busy = (b, on, t) => { b.disabled = on; if (t) b.textContent = t }
 
 $('b1').onclick = async () => {
-  const em = $('em').value.trim()
-  if (!em.includes('@')) return say('m1', 'email gak valid', 0)
-  const b = $('b1'); busy(b, true, 'mengirim...')
-  try {
-    const r = await fetch('/api/send-link', { method: 'POST', headers: {'content-type':'application/json'}, body: JSON.stringify({ email: em }) })
-    const j = await r.json()
-    if (j.success) { say('m1', 'link terkirim, cek email', 1); $('w-em').textContent = em; setTimeout(() => step(2), 700) }
-    else say('m1', j.message || 'gagal', 0)
-  } catch { say('m1', 'server gak nyambung', 0) }
-  busy(b, false); b.textContent = 'kirim link \u2192'
+    const email = $('em').value.trim(); // mengambil input email
+    if (!email) return say('m1', 'email kosong', 0);
+
+    const b = $('b1');
+    busy(b, true, 'mengirim...');
+
+    try {
+        const r = await fetch('/api/request-link', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+        const j = await r.json();
+
+        // JIKA SERVER MENOLAK KARENA BELUM BAYAR (HTTP 403)
+        if (r.status === 403 || (j.message && j.message.includes('SociaBuzz'))) {
+            showPaymentModal(email); // TAMPILKAN POP-UP SOCIABUZZ
+            say('m1', j.message || 'Belum membayar Rp 5.000', 0);
+        } else if (j.success) {
+            say('m1', 'Link terkirim! Cek email Anda.', 1);
+            step(2);
+        } else {
+            say('m1', j.message || 'Gagal mengirim link', 0);
+        }
+    } catch (err) {
+        say('m1', 'Terjadi kesalahan koneksi server', 0);
+    } finally {
+        busy(b, false);
+        b.textContent = 'kirim link ->';
+    }
 }
 
 $('b2').onclick = () => step(1)
@@ -209,6 +229,47 @@ $('b3').onclick = async () => {
 
 $('b4').onclick = () => { navigator.clipboard.writeText(window.__tok || ''); $('b4').textContent = 'copied' }
 $('b5').onclick = () => { $('lk').value = ''; step(1) }
+</script>
+<!-- MODAL POP-UP SOCIABUZZ -->
+<div id="paymentModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; align-items:center; justify-content:center;">
+    <div style="background:#111; border:1px solid #22c55e; border-radius:12px; padding:24px; max-width:400px; width:90%; text-align:center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); font-family: monospace;">
+        <h3 style="color:#22c55e; margin-top:0; font-size:18px;">⚠️ Pembayaran Diperlukan</h3>
+        <p style="color:#ccc; font-size:14px; margin-bottom:8px;">Email: <b id="modalUserEmail" style="color:#fff;"></b></p>
+        <p style="color:#aaa; font-size:13px; line-height:1.5;">Untuk melanjutkan aktivasi, silakan bayar <b>Rp 5.000</b> di SociaBuzz menggunakan <u>email yang sama</u>.</p>
+        
+        <a id="sociabuzzLink" href="https://sociabuzz.com/jawaaaaaa/tribe" target="_blank" style="display:block; background:#22c55e; color:#000; font-weight:bold; padding:12px; border-radius:6px; text-decoration:none; margin:16px 0 10px 0;">
+            🚀 BAYAR Rp 5.000 SEKARANG
+        </a>
+
+        <button onclick="retryActivation()" style="width:100%; background:#222; color:#fff; border:1px solid #444; padding:10px; border-radius:6px; cursor:pointer; font-weight:bold; margin-bottom:8px;">
+            ✅ Saya Sudah Bayar (Cek Ulang)
+        </button>
+
+        <button onclick="closePaymentModal()" style="background:transparent; color:#888; border:none; cursor:pointer; font-size:12px; text-decoration:underline;">
+            Batal / Tutup
+        </button>
+    </div>
+</div>
+
+<script>
+function showPaymentModal(email) {
+    document.getElementById('modalUserEmail').innerText = email;
+    document.getElementById('paymentModal').style.display = 'flex';
+}
+
+function closePaymentModal() {
+    document.getElementById('paymentModal').style.display = 'none';
+}
+
+function retryActivation() {
+    closePaymentModal();
+    if (typeof $ === 'function' && $('b3')) {
+        $('b3').click();
+    } else {
+        const btn = document.querySelector('button[type="submit"]') || document.querySelector('button');
+        if (btn) btn.click();
+    }
+}
 </script>
 </body>
 </html>
