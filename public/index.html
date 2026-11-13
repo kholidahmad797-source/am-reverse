@@ -101,7 +101,7 @@
         .corner-br { bottom: 0; right: 0; clip-path: polygon(100% 0, 0 100%, 100% 100%); }
         .corner-br::after { bottom: 14px; right: 14px; }
 
-        /* Steel Window Mullion Bars (Subtle Structural Dividers) */
+        /* Steel Window Mullion Bars */
         .steel-beam-top, .steel-beam-bottom {
             position: fixed;
             left: 50%;
@@ -127,7 +127,7 @@
             width: 100%;
             height: 100%;
             z-index: 30;
-            pointer-events: none; /* Handled dynamically when grabbing/double-clicking logo */
+            pointer-events: none;
             display: block;
         }
 
@@ -136,7 +136,7 @@
             background: rgba(11, 16, 28, 0.76);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(45, 212, 191, 0.24);
+            border: 1px solid rgba(16, 245, 156, 0.24);
             box-shadow:
                 0 24px 60px rgba(0, 0, 0, 0.8),
                 0 0 30px rgba(16, 185, 129, 0.1),
@@ -152,7 +152,7 @@
         }
         .interactive-btn:hover {
             filter: brightness(1.08);
-            box-shadow: 0 0 24px rgba(20, 184, 166, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 24px rgba(16, 245, 156, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
         .interactive-btn:active {
             transform: scale(0.97);
@@ -186,7 +186,7 @@
             position: absolute;
             border-radius: 50%;
             transform: translate(-50%, -50%) scale(0);
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.55) 0%, rgba(45, 212, 191, 0.32) 45%, transparent 75%);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.55) 0%, rgba(16, 245, 156, 0.32) 45%, transparent 75%);
             animation: clickWaveExpand 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             pointer-events: none;
             z-index: 2;
@@ -196,7 +196,7 @@
             border-radius: 50%;
             transform: translate(-50%, -50%) scale(0.2);
             border: 1.5px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 0 10px rgba(45, 212, 191, 0.85);
+            box-shadow: 0 0 10px rgba(16, 245, 156, 0.85);
             animation: clickRingTrace 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
             pointer-events: none;
             z-index: 3;
@@ -234,7 +234,7 @@
         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
         <span>SAT-DECK 04 // ZERO-G CHAMBER</span>
     </div>
-    <div id="hud-logo-status" class="fixed top-7 sm:top-9 right-16 sm:right-24 z-20 pointer-events-none text-[10px] font-mono-tech tracking-widest text-teal-400/90">
+    <div id="hud-logo-status" class="fixed top-7 sm:top-9 right-16 sm:right-24 z-20 pointer-events-none text-[10px] font-mono-tech tracking-widest text-emerald-400/90">
         CORE: FLOATING
     </div>
 
@@ -246,7 +246,7 @@
         
         <!-- Header -->
         <div class="text-center mb-4">
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-mono-tech bg-slate-900/85 text-teal-300 border border-teal-500/30 mb-2.5 backdrop-blur-md">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-mono-tech bg-slate-900/85 text-emerald-300 border border-emerald-500/30 mb-2.5 backdrop-blur-md">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse mr-2"></span> ORBITAL TERMINAL • ACTIVE
             </span>
             <h1 class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-emerald-300 via-teal-300 to-cyan-300 bg-clip-text text-transparent">
@@ -262,7 +262,7 @@
             <div id="step-1" class="space-y-4">
                 <div>
                     <label class="block text-[11px] font-mono-tech uppercase tracking-wider text-slate-400 mb-2">Email Akun Alight Motion</label>
-                    <input type="email" id="user-email" placeholder="masukkan.email@gmail.com" class="w-full px-4 py-3 rounded-xl bg-slate-950/70 border border-slate-700/70 text-white placeholder-slate-500 focus:outline-none focus:border-teal-400 transition text-sm">
+                    <input type="email" id="user-email" placeholder="masukkan.email@gmail.com" class="w-full px-4 py-3 rounded-xl bg-slate-950/70 border border-slate-700/70 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400 transition text-sm">
                 </div>
                 <button onclick="startProcess()" class="interactive-btn w-full py-3.5 px-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold rounded-xl flex items-center justify-center space-x-2 text-sm cursor-pointer shadow-lg">
                     <span class="relative z-10">Mulai Proses</span>
@@ -272,15 +272,15 @@
 
             <!-- STEP 2: Loading -->
             <div id="step-loading" class="hidden py-7 text-center space-y-3">
-                <div class="inline-block animate-spin rounded-full h-9 w-9 border-t-2 border-b-2 border-teal-400"></div>
-                <h3 class="text-sm font-medium text-teal-300">Memproses Sinyal Terminal...</h3>
+                <div class="inline-block animate-spin rounded-full h-9 w-9 border-t-2 border-b-2 border-emerald-400"></div>
+                <h3 class="text-sm font-medium text-emerald-300">Memproses Sinyal Terminal...</h3>
                 <p id="loading-text" class="text-xs text-slate-400">Menyiapkan modul verifikasi tautan...</p>
             </div>
 
             <!-- STEP 3: Input Link -->
             <div id="step-verify" class="hidden space-y-4">
-                <div class="bg-teal-950/45 border border-teal-500/30 rounded-xl p-3 text-xs text-teal-100">
-                    <p class="font-bold mb-1 text-teal-300">Langkah Verifikasi:</p>
+                <div class="bg-emerald-950/45 border border-emerald-500/30 rounded-xl p-3 text-xs text-emerald-100">
+                    <p class="font-bold mb-1 text-emerald-300">Langkah Verifikasi:</p>
                     <ol class="list-decimal list-inside space-y-1 text-slate-300 text-[11px]">
                         <li>Buka inbox: <span id="display-email" class="text-white font-semibold underline"></span></li>
                         <li>Salin tautan dari <b>Alight Creative</b>.</li>
@@ -290,7 +290,7 @@
 
                 <div>
                     <label class="block text-[11px] font-mono-tech uppercase tracking-wider text-slate-400 mb-2">Tempel Link dari Email</label>
-                    <textarea id="activation-link" rows="2" placeholder="https://alightcreative.com/verify/..." class="w-full px-4 py-2.5 rounded-xl bg-slate-950/70 border border-slate-700/70 text-white placeholder-slate-500 focus:outline-none focus:border-teal-400 transition text-xs"></textarea>
+                    <textarea id="activation-link" rows="2" placeholder="https://alightcreative.com/verify/..." class="w-full px-4 py-2.5 rounded-xl bg-slate-950/70 border border-slate-700/70 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400 transition text-xs"></textarea>
                 </div>
 
                 <button onclick="processActivation()" class="interactive-btn w-full py-3.5 px-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold rounded-xl text-sm cursor-pointer shadow-lg">
@@ -430,7 +430,6 @@
                 ? (Math.random() * 0.45 - 0.22)
                 : (Math.PI + (Math.random() * 0.45 - 0.22));
 
-            // Generate jagged rocky polygon vertices
             const vertices = [];
             const pts = 11;
             for (let i = 0; i < pts; i++) {
@@ -439,7 +438,6 @@
                 vertices.push({ x: Math.cos(a) * dist, y: Math.sin(a) * dist });
             }
 
-            // Generate surface craters
             const craters = [];
             const craterCount = 3 + Math.floor(Math.random() * 3);
             for (let c = 0; c < craterCount; c++) {
@@ -466,7 +464,6 @@
         }
 
         function renderSpace(dt, nowSec) {
-            // Deep Space Backdrop
             const bg = sCtx.createRadialGradient(sWidth * 0.3, sHeight * 0.25, 40, sWidth * 0.5, sHeight * 0.5, Math.max(sWidth, sHeight) * 0.9);
             bg.addColorStop(0, '#091326');
             bg.addColorStop(0.5, '#040814');
@@ -474,14 +471,12 @@
             sCtx.fillStyle = bg;
             sCtx.fillRect(0, 0, sWidth, sHeight);
 
-            // Subtle Distant Nebula Glow
             const neb = sCtx.createRadialGradient(sWidth * 0.75, sHeight * 0.65, 10, sWidth * 0.75, sHeight * 0.65, sWidth * 0.4);
             neb.addColorStop(0, 'rgba(13, 148, 136, 0.08)');
             neb.addColorStop(1, 'transparent');
             sCtx.fillStyle = neb;
             sCtx.fillRect(0, 0, sWidth, sHeight);
 
-            // Twinkling Stars
             for (let i = 0; i < stars.length; i++) {
                 const st = stars[i];
                 const flicker = 0.65 + 0.35 * Math.sin(nowSec * st.twinkleSpeed + st.phase);
@@ -493,11 +488,10 @@
             }
             sCtx.globalAlpha = 1;
 
-            // Occasional Asteroids
             nextAsteroidTimer -= dt;
             if (nextAsteroidTimer <= 0) {
                 spawnAsteroid();
-                nextAsteroidTimer = 3.5 + Math.random() * 4.5; // Passes every 3.5 - 8 seconds
+                nextAsteroidTimer = 3.5 + Math.random() * 4.5;
             }
 
             for (let i = asteroids.length - 1; i >= 0; i--) {
@@ -506,7 +500,6 @@
                 ast.y += ast.vy * dt;
                 ast.rot += ast.rotSpeed * dt;
 
-                // Faint cosmic dust wake behind asteroid
                 sCtx.save();
                 const tailX = ast.x - ast.vx * 0.9;
                 const tailY = ast.y - ast.vy * 0.9;
@@ -522,7 +515,6 @@
                 sCtx.stroke();
                 sCtx.restore();
 
-                // Draw 3D-shaded asteroid body
                 sCtx.save();
                 sCtx.translate(ast.x, ast.y);
                 sCtx.rotate(ast.rot);
@@ -544,7 +536,6 @@
                 sCtx.strokeStyle = 'rgba(148, 163, 184, 0.25)';
                 sCtx.stroke();
 
-                // Craters
                 ast.craters.forEach(c => {
                     sCtx.beginPath();
                     sCtx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
@@ -554,7 +545,6 @@
 
                 sCtx.restore();
 
-                // Remove when far off-screen
                 if (ast.x < -ast.radius * 4 || ast.x > sWidth + ast.radius * 4 || ast.y < -ast.radius * 4 || ast.y > sHeight + ast.radius * 4) {
                     asteroids.splice(i, 1);
                 }
@@ -562,7 +552,7 @@
         }
 
         // =========================================================
-        // 3. 3D ALIGHT MOTION LOGO (BOUNCE, DRAG, SHATTER & RESPAWN)
+        // 3. 3D ALIGHT MOTION LOGO (3-SWIRL SPIRAL ICON)
         // =========================================================
         const logoCanvas = document.getElementById('logo-canvas');
         const lCtx = logoCanvas.getContext('2d');
@@ -570,23 +560,22 @@
 
         let lWidth = 0, lHeight = 0;
 
-        // 3D Logo State Machine: 'floating' | 'dragging' | 'shattered' | 'entering'
         const logo = {
             x: 0,
             y: 0,
             vx: 155,
             vy: 120,
-            radius: 44,
+            radius: 46,
             rotX: 0.2,
             rotY: 0.3,
             rotZ: 0,
             vRotX: 0.85,
             vRotY: 1.35,
-            vRotZ: 0.4,
-            state: 'floating',
+            vRotZ: 0.35,
+            state: 'floating', // 'floating' | 'dragging' | 'shattered' | 'entering'
             respawnTimer: 0,
             enterProgress: 0,
-            enterSide: 'right', // 'left' or 'right' airlock room
+            enterSide: 'right',
             scale: 1
         };
 
@@ -611,7 +600,7 @@
             logoCanvas.height = lHeight * dpr;
             lCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-            logo.radius = lWidth < 640 ? 38 : 46;
+            logo.radius = lWidth < 640 ? 40 : 48;
             if (logo.x === 0 && logo.y === 0) {
                 logo.x = lWidth * 0.25;
                 logo.y = lHeight * 0.28;
@@ -640,13 +629,13 @@
             logoCanvas.style.pointerEvents = 'none';
             document.body.style.cursor = 'default';
 
-            const colors = ['#00f5b8', '#10b981', '#2dd4bf', '#38bdf8', '#e2e8f0', '#06b6d4'];
+            const colors = ['#0ef59a', '#12f79d', '#059669', '#34d399', '#1e293b', '#38bdf8'];
             dustParticles = [];
-            const count = 175;
+            const count = 185;
             for (let i = 0; i < count; i++) {
                 const angle = Math.random() * Math.PI * 2;
                 const dist = Math.random() * logo.radius * 0.95;
-                const burstSpeed = 25 + Math.random() * 140;
+                const burstSpeed = 25 + Math.random() * 145;
                 dustParticles.push({
                     x: logo.x + Math.cos(angle) * dist,
                     y: logo.y + Math.sin(angle) * dist,
@@ -674,34 +663,95 @@
             logo.rotZ = 0;
         }
 
-        // Draw True 3D Extruded Alight Motion Emblem
+        // Helper: Rounded Square Path
+        function drawRoundedBox(ctx, size, cornerR) {
+            const half = size / 2;
+            ctx.beginPath();
+            ctx.moveTo(-half + cornerR, -half);
+            ctx.lineTo(half - cornerR, -half);
+            ctx.quadraticCurveTo(half, -half, half, -half + cornerR);
+            ctx.lineTo(half, half - cornerR);
+            ctx.quadraticCurveTo(half, half, half - cornerR, half);
+            ctx.lineTo(-half + cornerR, half);
+            ctx.quadraticCurveTo(-half, half, -half, half - cornerR);
+            ctx.lineTo(-half, -half + cornerR);
+            ctx.quadraticCurveTo(-half, -half, -half + cornerR, -half);
+            ctx.closePath();
+        }
+
+        // Helper: Tapered Crescent Spiral Arc (Sharp Tail -> Thick Rounded Cap)
+        function drawTaperedArc(ctx, cx, cy, arcR, startDeg, endDeg, maxThick) {
+            const startRad = (startDeg * Math.PI) / 180;
+            const endRad = (endDeg * Math.PI) / 180;
+            const steps = 48;
+
+            const outerPts = [];
+            const innerPts = [];
+
+            for (let i = 0; i <= steps; i++) {
+                const t = i / steps;
+                const ang = startRad + t * (endRad - startRad);
+                // Smooth taper from needle-thin tail (t=0) to full thickness (t=1)
+                const w = (0.2 + (maxThick - 0.2) * Math.pow(t, 1.12)) * 0.5;
+                outerPts.push({
+                    x: cx + (arcR + w) * Math.cos(ang),
+                    y: cy + (arcR + w) * Math.sin(ang)
+                });
+                innerPts.push({
+                    x: cx + (arcR - w) * Math.cos(ang),
+                    y: cy + (arcR - w) * Math.sin(ang)
+                });
+            }
+
+            ctx.beginPath();
+            ctx.moveTo(outerPts[0].x, outerPts[0].y);
+            for (let i = 1; i <= steps; i++) {
+                ctx.lineTo(outerPts[i].x, outerPts[i].y);
+            }
+
+            // Rounded semicircular cap at the thick end
+            const capX = cx + arcR * Math.cos(endRad);
+            const capY = cy + arcR * Math.sin(endRad);
+            ctx.arc(capX, capY, maxThick * 0.5, endRad, endRad + Math.PI, false);
+
+            for (let i = steps - 1; i >= 0; i--) {
+                ctx.lineTo(innerPts[i].x, innerPts[i].y);
+            }
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        // Render Official Alight Motion 3-Swirl Emblem in 3D
         function draw3DAlightMotionLogo(ctx, x, y, radius, rx, ry, rz, scale) {
             ctx.save();
             ctx.translate(x, y);
             ctx.scale(scale, scale);
 
-            // Ambient Zero-G Aura Glow
-            const aura = ctx.createRadialGradient(0, 0, radius * 0.2, 0, 0, radius * 1.55);
-            aura.addColorStop(0, 'rgba(16, 185, 129, 0.28)');
-            aura.addColorStop(0.6, 'rgba(6, 182, 212, 0.1)');
+            // Ambient Mint-Green Zero-G Glow
+            const aura = ctx.createRadialGradient(0, 0, radius * 0.2, 0, 0, radius * 1.65);
+            aura.addColorStop(0, 'rgba(14, 245, 154, 0.26)');
+            aura.addColorStop(0.6, 'rgba(16, 185, 129, 0.08)');
             aura.addColorStop(1, 'transparent');
             ctx.fillStyle = aura;
             ctx.beginPath();
-            ctx.arc(0, 0, radius * 1.55, 0, Math.PI * 2);
+            ctx.arc(0, 0, radius * 1.65, 0, Math.PI * 2);
             ctx.fill();
 
-            // Simulate 3D orientation matrix transforms using tilt projection
-            const tiltX = Math.sin(ry) * 0.38;
-            const tiltY = Math.sin(rx) * 0.38;
-            const squeezeX = Math.max(0.58, Math.cos(ry * 0.75));
-            const squeezeY = Math.max(0.58, Math.cos(rx * 0.75));
+            // 3D Tilt & Perspective Foreshortening
+            const tiltX = Math.sin(ry) * 0.42;
+            const tiltY = Math.sin(rx) * 0.42;
+            const squeezeX = Math.max(0.58, Math.cos(ry * 0.72));
+            const squeezeY = Math.max(0.58, Math.cos(rx * 0.72));
 
             ctx.rotate(rz);
 
-            // 1. 3D Extruded Metallic Depth Layers (Back to Front)
-            const depthLayers = 10;
-            const depthOffsetX = -tiltX * 16;
-            const depthOffsetY = -tiltY * 16;
+            const boxSize = radius * 1.72;
+            const cornerR = radius * 0.42;
+
+            // 1. 3D Extruded Navy-Steel Tile Thickness (Back to Front)
+            const depthLayers = 11;
+            const depthOffsetX = -tiltX * 18;
+            const depthOffsetY = -tiltY * 18;
 
             for (let d = depthLayers; d >= 1; d--) {
                 const ratio = d / depthLayers;
@@ -709,88 +759,77 @@
                 ctx.translate(depthOffsetX * ratio, depthOffsetY * ratio);
                 ctx.scale(squeezeX, squeezeY);
 
-                ctx.beginPath();
-                ctx.arc(0, 0, radius, 0, Math.PI * 2);
-                ctx.fillStyle = d === depthLayers ? '#042f2e' : (d % 2 === 0 ? '#0d9488' : '#0f766e');
+                drawRoundedBox(ctx, boxSize, cornerR);
+                ctx.fillStyle = d === depthLayers ? '#050a14' : (d % 2 === 0 ? '#0c192c' : '#11223b');
                 ctx.fill();
                 ctx.restore();
             }
 
-            // 2. Front Face Coin / Medallion Base
+            // 2. Front App Icon Base (Dark Navy-Blue matching Alight Motion Icon)
             ctx.save();
             ctx.scale(squeezeX, squeezeY);
 
-            const faceGrad = ctx.createLinearGradient(-radius, -radius, radius, radius);
-            faceGrad.addColorStop(0, '#0f172a');
-            faceGrad.addColorStop(0.5, '#071318');
-            faceGrad.addColorStop(1, '#020617');
-            ctx.beginPath();
-            ctx.arc(0, 0, radius, 0, Math.PI * 2);
-            ctx.fillStyle = faceGrad;
+            drawRoundedBox(ctx, boxSize, cornerR);
+            const iconBg = ctx.createRadialGradient(
+                boxSize * 0.25, -boxSize * 0.25, boxSize * 0.05,
+                0, 0, boxSize * 0.85
+            );
+            iconBg.addColorStop(0, '#1b2d4b');
+            iconBg.addColorStop(0.55, '#121d33');
+            iconBg.addColorStop(1, '#0b1222');
+            ctx.fillStyle = iconBg;
             ctx.fill();
 
-            // Outer Glowing Bezel Ring
-            ctx.lineWidth = 3;
-            const rimGrad = ctx.createLinearGradient(-radius, -radius, radius, radius);
-            rimGrad.addColorStop(0, '#5eead4');
-            rimGrad.addColorStop(0.5, '#10b981');
-            rimGrad.addColorStop(1, '#0891b2');
+            // Crisp Metallic Rim Highlight
+            ctx.lineWidth = 2;
+            const rimGrad = ctx.createLinearGradient(-boxSize / 2, -boxSize / 2, boxSize / 2, boxSize / 2);
+            rimGrad.addColorStop(0, 'rgba(110, 231, 183, 0.65)');
+            rimGrad.addColorStop(0.5, 'rgba(56, 189, 248, 0.25)');
+            rimGrad.addColorStop(1, 'rgba(14, 245, 154, 0.5)');
             ctx.strokeStyle = rimGrad;
             ctx.stroke();
 
-            // Inner Subtle Tech Ring
-            ctx.beginPath();
-            ctx.arc(0, 0, radius * 0.84, 0, Math.PI * 2);
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = 'rgba(45, 212, 191, 0.25)';
-            ctx.stroke();
+            // 3. Official Alight Motion Three Concentric Tapered Swirl Arcs
+            // Slight 3D parallax elevation for the mint arcs above the navy base
+            const swirlLiftX = tiltX * 4.5;
+            const swirlLiftY = tiltY * 4.5;
+            const swirlCenterX = swirlLiftX;
+            const swirlCenterY = radius * 0.04 + swirlLiftY;
 
-            // 3. Iconic Geometric Alight Motion 'A' Ribbon (3D Layered Fold)
-            const r = radius * 0.56;
+            // Shadow cast by the 3D arcs onto the navy tile
+            ctx.save();
+            ctx.translate(-swirlLiftX * 0.6 + 1.5, -swirlLiftY * 0.6 + 2.5);
+            ctx.fillStyle = 'rgba(2, 6, 18, 0.65)';
+            drawTaperedArc(ctx, 0, radius * 0.04, radius * 0.58, 192, 370, radius * 0.115);
+            drawTaperedArc(ctx, 0, radius * 0.04, radius * 0.42, 224, 415, radius * 0.112);
+            drawTaperedArc(ctx, 0, radius * 0.04, radius * 0.26, 256, 524, radius * 0.108);
+            ctx.restore();
 
-            // Left Leg of Geometric Ribbon
-            ctx.beginPath();
-            ctx.moveTo(0, -r * 1.05);
-            ctx.lineTo(-r * 0.92, r * 0.78);
-            ctx.lineTo(-r * 0.36, r * 0.78);
-            ctx.lineTo(0, r * 0.04);
-            ctx.closePath();
-            const leftGrad = ctx.createLinearGradient(0, -r, -r, r);
-            leftGrad.addColorStop(0, '#6ee7b7');
-            leftGrad.addColorStop(1, '#059669');
-            ctx.fillStyle = leftGrad;
-            ctx.fill();
+            // Vibrant Mint-Green 3D Swirl Arcs (#0ef59a -> #00d984)
+            const mintGrad = ctx.createLinearGradient(-radius * 0.6, -radius * 0.6, radius * 0.6, radius * 0.6);
+            mintGrad.addColorStop(0, '#4ade80');
+            mintGrad.addColorStop(0.45, '#0ef59a');
+            mintGrad.addColorStop(1, '#00d684');
 
-            // Right Leg of Geometric Ribbon (Overlapping 3D Fold)
-            ctx.beginPath();
-            ctx.moveTo(0, -r * 1.05);
-            ctx.lineTo(r * 0.92, r * 0.78);
-            ctx.lineTo(r * 0.36, r * 0.78);
-            ctx.lineTo(-r * 0.22, -r * 0.32);
-            ctx.closePath();
-            const rightGrad = ctx.createLinearGradient(0, -r, r, r);
-            rightGrad.addColorStop(0, '#5eead4');
-            rightGrad.addColorStop(1, '#0284c7');
-            ctx.fillStyle = rightGrad;
-            ctx.fill();
+            ctx.fillStyle = mintGrad;
+            ctx.shadowColor = 'rgba(14, 245, 154, 0.55)';
+            ctx.shadowBlur = 10;
 
-            // Crossbar / Inner Fold Accent
-            ctx.beginPath();
-            ctx.moveTo(-r * 0.24, r * 0.32);
-            ctx.lineTo(r * 0.44, r * 0.32);
-            ctx.lineTo(r * 0.58, r * 0.62);
-            ctx.lineTo(-r * 0.38, r * 0.62);
-            ctx.closePath();
-            ctx.fillStyle = '#a7f3d0';
-            ctx.fill();
+            // Outer Arc (sweeps from upper-left thin tip to right-lower thick cap)
+            drawTaperedArc(ctx, swirlCenterX, swirlCenterY, radius * 0.58, 192, 370, radius * 0.115);
+            // Middle Arc (sweeps from top-left thin tip to bottom-right thick cap)
+            drawTaperedArc(ctx, swirlCenterX, swirlCenterY, radius * 0.42, 224, 415, radius * 0.112);
+            // Inner Arc (sweeps from top thin tip around bottom to lower-left thick cap)
+            drawTaperedArc(ctx, swirlCenterX, swirlCenterY, radius * 0.26, 256, 524, radius * 0.108);
 
-            // Specular Glass Sheen Across Front Face
-            const sheen = ctx.createLinearGradient(-radius, -radius, radius * 0.5, radius * 0.5);
-            sheen.addColorStop(0, 'rgba(255, 255, 255, 0.28)');
-            sheen.addColorStop(0.45, 'rgba(255, 255, 255, 0.03)');
+            ctx.shadowBlur = 0;
+
+            // Subtle Glass Specular Reflection Across Front Tile
+            drawRoundedBox(ctx, boxSize - 2, cornerR - 1);
+            const sheen = ctx.createLinearGradient(-boxSize / 2, -boxSize / 2, boxSize * 0.35, boxSize * 0.35);
+            sheen.addColorStop(0, 'rgba(255, 255, 255, 0.22)');
+            sheen.addColorStop(0.42, 'rgba(255, 255, 255, 0.02)');
             sheen.addColorStop(1, 'transparent');
-            ctx.beginPath();
-            ctx.arc(0, 0, radius - 1.5, 0, Math.PI * 2);
             ctx.fillStyle = sheen;
             ctx.fill();
 
@@ -808,9 +847,8 @@
             const doorHeight = 135 * doorAlpha;
 
             ctx.save();
-            // Volumetric Light Beam spilling from the adjacent room
             const beamGrad = ctx.createLinearGradient(wallX, y, wallX + dir * 180, y);
-            beamGrad.addColorStop(0, `rgba(45, 212, 191, ${0.42 * doorAlpha})`);
+            beamGrad.addColorStop(0, `rgba(14, 245, 154, ${0.42 * doorAlpha})`);
             beamGrad.addColorStop(0.5, `rgba(16, 185, 129, ${0.14 * doorAlpha})`);
             beamGrad.addColorStop(1, 'transparent');
 
@@ -823,8 +861,7 @@
             ctx.closePath();
             ctx.fill();
 
-            // Glowing Hatch Slit on the Satellite Bulkhead Wall
-            ctx.strokeStyle = `rgba(94, 234, 212, ${0.95 * doorAlpha})`;
+            ctx.strokeStyle = `rgba(110, 231, 183, ${0.95 * doorAlpha})`;
             ctx.lineWidth = 4;
             ctx.beginPath();
             ctx.moveTo(wallX, y - doorHeight * 0.5);
@@ -846,10 +883,9 @@
 
         function isPointerOnLogo(clientX, clientY) {
             if (logo.state !== 'floating' && logo.state !== 'dragging') return false;
-            return Math.hypot(clientX - logo.x, clientY - logo.y) <= logo.radius * 1.18;
+            return Math.hypot(clientX - logo.x, clientY - logo.y) <= logo.radius * 1.2;
         }
 
-        // Cursor feedback on desktop hover
         window.addEventListener('pointermove', (e) => {
             if (isDragging) {
                 const now = performance.now();
@@ -861,11 +897,9 @@
                 const clampedX = Math.max(bounds.left, Math.min(bounds.right, newX));
                 const clampedY = Math.max(bounds.top, Math.min(bounds.bottom, newY));
 
-                // Track throw velocity
                 logo.vx = (clampedX - lastDragX) / dt * 0.65;
                 logo.vy = (clampedY - lastDragY) / dt * 0.65;
 
-                // Tilt 3D logo naturally based on drag direction
                 logo.rotY += (clampedX - logo.x) * 0.025;
                 logo.rotX -= (clampedY - logo.y) * 0.025;
 
@@ -882,7 +916,6 @@
             }
         });
 
-        // Capture pointerdown so grabbing the logo works even when floating over the UI card
         window.addEventListener('pointerdown', (e) => {
             if (!isPointerOnLogo(e.clientX, e.clientY)) return;
 
@@ -890,7 +923,6 @@
             e.stopPropagation();
 
             const now = performance.now();
-            // Double-click / Double-tap detection (< 320ms)
             if (now - lastTapTime < 320) {
                 lastTapTime = 0;
                 shatterLogoIntoDust();
@@ -914,7 +946,6 @@
             logo.state = 'floating';
             document.body.style.cursor = 'grab';
 
-            // Clamp max throw speed and ensure minimum drift speed
             const speed = Math.hypot(logo.vx, logo.vy);
             if (speed < 60) {
                 const a = Math.random() * Math.PI * 2;
@@ -936,10 +967,8 @@
             lastFrameTime = now;
             const nowSec = now / 1000;
 
-            // 1. Render Outer Space & Asteroids
             renderSpace(dt, nowSec);
 
-            // 2. Render 3D Logo Layer
             lCtx.clearRect(0, 0, lWidth, lHeight);
             const bounds = getWallBounds();
 
@@ -1001,7 +1030,7 @@
 
             } else if (logo.state === 'entering') {
                 hudStatus.innerText = 'CORE: AIRLOCK TRANSFER';
-                logo.enterProgress += dt / 1.35; // 1.35s smooth entrance from adjacent room
+                logo.enterProgress += dt / 1.35;
 
                 if (logo.enterProgress >= 1) {
                     logo.enterProgress = 1;
@@ -1024,7 +1053,7 @@
                 }
             }
 
-            // 3. Render Zero-G Dust Particles
+            // Render Zero-G Dust Particles
             for (let i = dustParticles.length - 1; i >= 0; i--) {
                 const p = dustParticles[i];
                 p.life -= dt;
@@ -1046,7 +1075,7 @@
             }
             lCtx.globalAlpha = 1;
 
-            // 4. Render Wall Bounce Sparks
+            // Render Wall Bounce Sparks
             for (let i = bounceSparks.length - 1; i >= 0; i--) {
                 const sp = bounceSparks[i];
                 sp.life -= dt;
@@ -1057,7 +1086,7 @@
                 sp.x += sp.vx * dt;
                 sp.y += sp.vy * dt;
                 lCtx.globalAlpha = sp.life / sp.maxLife;
-                lCtx.fillStyle = '#5eead4';
+                lCtx.fillStyle = '#0ef59a';
                 lCtx.beginPath();
                 lCtx.arc(sp.x, sp.y, 2, 0, Math.PI * 2);
                 lCtx.fill();
