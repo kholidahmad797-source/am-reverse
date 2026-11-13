@@ -1,275 +1,1080 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>am — activate</title>
-<style>
-:root {
-  --bg: #0a0a0b;
-  --panel: #111113;
-  --line: #232326;
-  --txt: #e8e8ea;
-  --dim: #8a8a91;
-  --acc: #5ec269;
-  --acc-dim: #2c4a30;
-  --red: #e05252;
-}
-* { margin: 0; padding: 0; box-sizing: border-box }
-body {
-  background: var(--bg);
-  color: var(--txt);
-  font-family: ui-monospace, 'Cascadia Code', Menlo, monospace;
-  font-size: 13px;
-  line-height: 1.6;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  padding: 48px 16px;
-}
-.wrap { width: 100%; max-width: 460px }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AM Orbital Station • Personal Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
 
-header { border-bottom: 1px solid var(--line); padding-bottom: 14px; margin-bottom: 20px }
-header h1 { font-size: 15px; font-weight: 600; letter-spacing: .02em }
-header h1 span { color: var(--acc) }
-header p { color: var(--dim); font-size: 12px; margin-top: 2px }
-
-.steps { display: flex; gap: 0; margin-bottom: 18px; font-size: 11px }
-.steps div { flex: 1; padding: 6px 0; border-bottom: 2px solid var(--line); color: var(--dim) }
-.steps div.on { border-color: var(--acc); color: var(--txt) }
-.steps div.done { border-color: var(--acc-dim); color: var(--acc) }
-
-.panel {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  padding: 18px;
-  margin-bottom: 14px;
-}
-.panel h2 { font-size: 13px; font-weight: 600; margin-bottom: 4px }
-.panel .hint { color: var(--dim); font-size: 11.5px; margin-bottom: 14px }
-label { display: block; color: var(--dim); font-size: 11px; margin-bottom: 5px; letter-spacing: .03em }
-input {
-  width: 100%;
-  background: var(--bg);
-  border: 1px solid var(--line);
-  color: var(--txt);
-  font: inherit;
-  padding: 9px 11px;
-  outline: none;
-}
-input:focus { border-color: var(--acc) }
-button {
-  background: var(--acc);
-  color: #06130a;
-  border: none;
-  font: inherit;
-  font-weight: 600;
-  padding: 9px 18px;
-  cursor: pointer;
-  margin-top: 12px;
-}
-button.sec { background: transparent; color: var(--dim); border: 1px solid var(--line) }
-button:disabled { opacity: .45; cursor: wait }
-
-.msg { padding: 9px 12px; font-size: 12px; margin: 12px 0; display: none }
-.msg.err { display: block; background: #2a1414; border: 1px solid #4a2020; color: var(--red) }
-.msg.ok { display: block; background: #12201a; border: 1px solid var(--acc-dim); color: var(--acc) }
-
-.kv { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 12px }
-.kv:last-child { border-bottom: none }
-.kv b { color: var(--dim); font-weight: 400 }
-.kv span { color: var(--txt); text-align: right; word-break: break-all; max-width: 60% }
-.tok {
-  background: var(--bg); border: 1px solid var(--line);
-  padding: 9px 11px; font-size: 10.5px; word-break: break-all;
-  color: var(--dim); max-height: 90px; overflow: hidden;
-}
-button.tiny { margin: 0; padding: 4px 10px; font-size: 11px }
-footer { margin-top: 26px; color: #3f3f44; font-size: 10.5px; text-align: center }
-.hide { display: none }
-</style>
-</head>
-<body>
-<div class="wrap">
-
-<header>
-  <h1>am <span>/</span> activate <span style="color:var(--dim);font-weight:400">by neo</span></h1>
-  <p>alight motion premium — magic link activation</p>
-</header>
-
-<div class="steps">
-  <div id="n1" class="on">01 email</div>
-  <div id="n2">02 link</div>
-  <div id="n3">03 done</div>
-</div>
-
-<div class="panel" style="display:flex;justify-content:space-between;align-items:center">
-  <div>
-    <div style="color:var(--dim);font-size:10.5px;letter-spacing:.05em">TOTAL AKTIVASI</div>
-    <div style="font-size:20px;font-weight:600;color:var(--acc)" id="st-total">-</div>
-  </div>
-  <div style="text-align:right">
-    <div style="color:var(--dim);font-size:10.5px;letter-spacing:.05em">HARI INI</div>
-    <div style="font-size:20px;font-weight:600" id="st-today">-</div>
-  </div>
-</div>
-
-<div class="panel" id="p1">
-  <h2>masukkan email</h2>
-  <p class="hint">link login dikirim ke email, tanpa password.</p>
-  <label>email</label>
-  <input id="em" type="email" placeholder="nama@email.com">
-  <button id="b1">kirim link &rarr;</button>
-  <div id="m1" class="msg"></div>
-</div>
-
-<div class="panel hide" id="p2">
-  <h2>tempel link</h2>
-  <p class="hint">link terkirim ke <span id="w-em" style="color:var(--txt)">-</span>. copy link dari email, paste di sini.</p>
-  <label>link verifikasi</label>
-  <input id="lk" type="text" placeholder="https://... atau oobCode">
-  <button id="b2">&larr; kembali</button>
-  <button id="b3">verifikasi &rarr;</button>
-  <div id="m2" class="msg"></div>
-</div>
-
-<div class="panel hide" id="p3">
-  <h2 style="color:var(--acc)">premium aktif</h2>
-  <p class="hint">detail akun di bawah, token bisa dicopy.</p>
-  <div class="kv"><b>email</b><span id="r-em">-</span></div>
-  <div class="kv"><b>uid</b><span id="r-uid">-</span></div>
-  <div class="kv"><b>order</b><span id="r-ord">-</span></div>
-  <div style="margin-top:12px">
-    <label>id token</label>
-    <div class="tok" id="r-tok">-</div>
-    <button class="tiny sec" id="b4">copy token</button>
-    <button class="tiny sec" id="b5">aktivasi lain</button>
-  </div>
-</div>
-
-<footer>unofficial &middot; reverse engineered &middot; use at your own risk</footer>
-
-</div>
-
-<script>
-const $ = i => document.getElementById(i)
-
-fetch('/api/stats').then(r => r.json()).then(j => {
-  $('st-total').textContent = Number(j.total || 0).toLocaleString('id-ID')
-  $('st-today').textContent = Number(j.today || 0).toLocaleString('id-ID')
-}).catch(() => {})
-
-const step = n => {
-  for (let i = 1; i <= 3; i++) {
-    $('p' + i).classList.toggle('hide', i !== n)
-    $('n' + i).className = i < n ? 'done' : (i === n ? 'on' : '')
-  }
-}
-const say = (id, txt, ok) => {
-  const m = $(id)
-  m.textContent = txt
-  m.className = 'msg ' + (ok ? 'ok' : 'err')
-}
-const busy = (b, on, t) => { b.disabled = on; if (t) b.textContent = t }
-
-$('b1').onclick = async () => {
-    const email = $('em').value.trim(); // mengambil input email
-    if (!email) return say('m1', 'email kosong', 0);
-
-    const b = $('b1');
-    busy(b, true, 'mengirim...');
-
-    try {
-        const r = await fetch('/api/request-link', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email })
-        });
-        const j = await r.json();
-
-        // JIKA SERVER MENOLAK KARENA BELUM BAYAR (HTTP 403)
-        if (r.status === 403 || (j.message && j.message.includes('SociaBuzz'))) {
-            showPaymentModal(email); // TAMPILKAN POP-UP SOCIABUZZ
-            say('m1', j.message || 'Belum membayar Rp 5.000', 0);
-        } else if (j.success) {
-            say('m1', 'Link terkirim! Cek email Anda.', 1);
-            step(2);
-        } else {
-            say('m1', j.message || 'Gagal mengirim link', 0);
+        * {
+            box-sizing: border-box;
         }
-    } catch (err) {
-        say('m1', 'Terjadi kesalahan koneksi server', 0);
-    } finally {
-        busy(b, false);
-        b.textContent = 'kirim link ->';
-    }
-}
 
-$('b2').onclick = () => step(1)
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #02040a;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-$('b3').onclick = async () => {
-  const raw = $('lk').value.trim()
-  if (!raw) return say('m2', 'link kosong', 0)
-  const b = $('b3'); busy(b, true, 'verifikasi...')
-  try {
-    const r = await fetch('/api/verify-link', { method: 'POST', headers: {'content-type':'application/json'}, body: JSON.stringify({ email: $('w-em').textContent, magicLink: raw }) })
-    const j = await r.json()
-    if (j.success) {
-      const d = j.data
-      $('r-em').textContent = d.email
-      $('r-uid').textContent = d.uid
-      $('r-ord').textContent = d.orderId || '-'
-      $('r-tok').textContent = d.idToken
-      window.__tok = d.idToken
-      step(3)
-    } else say('m2', j.message || 'gagal', 0)
-  } catch { say('m2', 'server gak nyambung', 0) }
-  busy(b, false); b.textContent = 'verifikasi \u2192'
-}
+        .font-mono-tech {
+            font-family: 'JetBrains Mono', monospace;
+        }
 
-$('b4').onclick = () => { navigator.clipboard.writeText(window.__tok || ''); $('b4').textContent = 'copied' }
-$('b5').onclick = () => { $('lk').value = ''; step(1) }
-</script>
-<!-- MODAL POP-UP SOCIABUZZ -->
-<div id="paymentModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; align-items:center; justify-content:center;">
-    <div style="background:#111; border:1px solid #22c55e; border-radius:12px; padding:24px; max-width:400px; width:90%; text-align:center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); font-family: monospace;">
-        <h3 style="color:#22c55e; margin-top:0; font-size:18px;">⚠️ Pembayaran Diperlukan</h3>
-        <p style="color:#ccc; font-size:14px; margin-bottom:8px;">Email: <b id="modalUserEmail" style="color:#fff;"></b></p>
-        <p style="color:#aaa; font-size:13px; line-height:1.5;">Untuk melanjutkan aktivasi, silakan bayar <b>Rp 5.000</b> di SociaBuzz menggunakan <u>email yang sama</u>.</p>
-        
-        <a id="sociabuzzLink" href="https://sociabuzz.com/jawaaaaaa/tribe" target="_blank" style="display:block; background:#22c55e; color:#000; font-weight:bold; padding:12px; border-radius:6px; text-decoration:none; margin:16px 0 10px 0;">
-            🚀 BAYAR Rp 5.000 SEKARANG
-        </a>
+        /* Layer 1: Outer Space & Asteroids */
+        #space-canvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            display: block;
+        }
 
-        <button onclick="retryActivation()" style="width:100%; background:#222; color:#fff; border:1px solid #444; padding:10px; border-radius:6px; cursor:pointer; font-weight:bold; margin-bottom:8px;">
-            ✅ Saya Sudah Bayar (Cek Ulang)
-        </button>
+        /* Layer 2: Glass Reflection & Subtle Tint inside Satellite Viewport */
+        .satellite-glass {
+            position: fixed;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            background: 
+                linear-gradient(125deg, rgba(255, 255, 255, 0.045) 0%, rgba(255, 255, 255, 0.01) 32%, transparent 55%),
+                radial-gradient(circle at 50% 50%, transparent 55%, rgba(2, 6, 16, 0.55) 100%);
+            box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.85);
+        }
 
-        <button onclick="closePaymentModal()" style="background:transparent; color:#888; border:none; cursor:pointer; font-size:12px; text-decoration:underline;">
-            Batal / Tutup
-        </button>
+        /* Layer 3: Heavy Steel Satellite Window Frame (Edges & Corners) */
+        .satellite-frame {
+            position: fixed;
+            inset: 0;
+            z-index: 15;
+            pointer-events: none;
+            border: 18px solid #141923;
+            box-shadow:
+                inset 0 0 0 3px #2b3547,
+                inset 0 0 0 6px #0b0e14,
+                inset 0 12px 28px rgba(0, 0, 0, 0.9),
+                inset 0 -12px 28px rgba(0, 0, 0, 0.9);
+        }
+
+        @media (min-width: 640px) {
+            .satellite-frame {
+                border-width: 26px;
+            }
+        }
+
+        /* Metallic Corner Gussets / Steel Brackets */
+        .steel-corner {
+            position: fixed;
+            width: 74px;
+            height: 74px;
+            z-index: 16;
+            pointer-events: none;
+            background: linear-gradient(135deg, #273040 0%, #131822 65%, #0c0f16 100%);
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+        }
+        .steel-corner::after {
+            content: "";
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #94a3b8, #1e293b);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.9);
+        }
+        .corner-tl { top: 0; left: 0; clip-path: polygon(0 0, 100% 0, 0 100%); }
+        .corner-tl::after { top: 14px; left: 14px; }
+
+        .corner-tr { top: 0; right: 0; clip-path: polygon(0 0, 100% 0, 100% 100%); }
+        .corner-tr::after { top: 14px; right: 14px; }
+
+        .corner-bl { bottom: 0; left: 0; clip-path: polygon(0 0, 0 100%, 100% 100%); }
+        .corner-bl::after { bottom: 14px; left: 14px; }
+
+        .corner-br { bottom: 0; right: 0; clip-path: polygon(100% 0, 0 100%, 100% 100%); }
+        .corner-br::after { bottom: 14px; right: 14px; }
+
+        /* Steel Window Mullion Bars (Subtle Structural Dividers) */
+        .steel-beam-top, .steel-beam-bottom {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 240px;
+            height: 8px;
+            background: linear-gradient(180deg, #2c3648, #131822);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            z-index: 16;
+            pointer-events: none;
+        }
+        .steel-beam-top { top: 16px; border-radius: 0 0 8px 8px; }
+        .steel-beam-bottom { bottom: 16px; border-radius: 8px 8px 0 0; }
+        @media (min-width: 640px) {
+            .steel-beam-top { top: 24px; }
+            .steel-beam-bottom { bottom: 24px; }
+        }
+
+        /* Layer 4: 3D Floating Alight Motion Logo & Airlock Canvas */
+        #logo-canvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 30;
+            pointer-events: none; /* Handled dynamically when grabbing/double-clicking logo */
+            display: block;
+        }
+
+        /* Layer 5: Aerospace Control Panel Card */
+        .control-panel {
+            background: rgba(11, 16, 28, 0.76);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(45, 212, 191, 0.24);
+            box-shadow:
+                0 24px 60px rgba(0, 0, 0, 0.8),
+                0 0 30px rgba(16, 185, 129, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.12);
+        }
+
+        /* Shimmer & Click Ripple Buttons */
+        .interactive-btn {
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+            transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease, filter 0.25s ease;
+        }
+        .interactive-btn:hover {
+            filter: brightness(1.08);
+            box-shadow: 0 0 24px rgba(20, 184, 166, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+        .interactive-btn:active {
+            transform: scale(0.97);
+        }
+        .interactive-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -120%;
+            width: 65%;
+            height: 100%;
+            background: linear-gradient(
+                110deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.1) 35%,
+                rgba(255, 255, 255, 0.28) 50%,
+                rgba(255, 255, 255, 0.1) 65%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: skewX(-22deg);
+            animation: btnShimmer 4.2s infinite ease-in-out;
+            pointer-events: none;
+            z-index: 1;
+        }
+        @keyframes btnShimmer {
+            0% { left: -120%; }
+            38%, 100% { left: 165%; }
+        }
+
+        .btn-click-wave {
+            position: absolute;
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.55) 0%, rgba(45, 212, 191, 0.32) 45%, transparent 75%);
+            animation: clickWaveExpand 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .btn-click-ring {
+            position: absolute;
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0.2);
+            border: 1.5px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 10px rgba(45, 212, 191, 0.85);
+            animation: clickRingTrace 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            pointer-events: none;
+            z-index: 3;
+        }
+        @keyframes clickWaveExpand {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0.95; }
+            100% { transform: translate(-50%, -50%) scale(2.6); opacity: 0; }
+        }
+        @keyframes clickRingTrace {
+            0% { transform: translate(-50%, -50%) scale(0.2); opacity: 1; }
+            70% { opacity: 0.55; }
+            100% { transform: translate(-50%, -50%) scale(1.65); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="text-white flex items-center justify-center p-6 sm:p-10 relative">
+
+    <!-- Layer 1: Outer Space & Passing Asteroids -->
+    <canvas id="space-canvas"></canvas>
+
+    <!-- Layer 2: Wide Glass Reflection -->
+    <div class="satellite-glass"></div>
+
+    <!-- Layer 3: Satellite Metallic Frame & Structural Brackets -->
+    <div class="satellite-frame"></div>
+    <div class="steel-corner corner-tl"></div>
+    <div class="steel-corner corner-tr"></div>
+    <div class="steel-corner corner-bl"></div>
+    <div class="steel-corner corner-br"></div>
+    <div class="steel-beam-top"></div>
+    <div class="steel-beam-bottom"></div>
+
+    <!-- Telemetry HUD Labels on Satellite Frame -->
+    <div class="fixed top-7 sm:top-9 left-16 sm:left-24 z-20 pointer-events-none hidden sm:flex items-center space-x-3 text-[10px] font-mono-tech tracking-widest text-slate-400/80">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>SAT-DECK 04 // ZERO-G CHAMBER</span>
     </div>
-</div>
+    <div id="hud-logo-status" class="fixed top-7 sm:top-9 right-16 sm:right-24 z-20 pointer-events-none text-[10px] font-mono-tech tracking-widest text-teal-400/90">
+        CORE: FLOATING
+    </div>
 
-<script>
-function showPaymentModal(email) {
-    document.getElementById('modalUserEmail').innerText = email;
-    document.getElementById('paymentModal').style.display = 'flex';
-}
+    <!-- Layer 4: Interactive 3D Alight Motion Logo -->
+    <canvas id="logo-canvas"></canvas>
 
-function closePaymentModal() {
-    document.getElementById('paymentModal').style.display = 'none';
-}
+    <!-- Layer 5: Main Console Card -->
+    <div class="w-full max-w-sm sm:max-w-md relative z-20 pointer-events-none">
+        
+        <!-- Header -->
+        <div class="text-center mb-4">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-mono-tech bg-slate-900/85 text-teal-300 border border-teal-500/30 mb-2.5 backdrop-blur-md">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse mr-2"></span> ORBITAL TERMINAL • ACTIVE
+            </span>
+            <h1 class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-emerald-300 via-teal-300 to-cyan-300 bg-clip-text text-transparent">
+                AM Personal Generator
+            </h1>
+            <p class="text-slate-400 text-[11px] mt-1">Seret logo 3D untuk menggeser • Klik 2x pada logo untuk menghancurkan</p>
+        </div>
 
-function retryActivation() {
-    closePaymentModal();
-    if (typeof $ === 'function' && $('b3')) {
-        $('b3').click();
-    } else {
-        const btn = document.querySelector('button[type="submit"]') || document.querySelector('button');
-        if (btn) btn.click();
-    }
-}
-</script>
+        <!-- Console Card -->
+        <div class="control-panel rounded-2xl p-5 sm:p-6 relative overflow-hidden pointer-events-auto">
+            
+            <!-- STEP 1: Input Email -->
+            <div id="step-1" class="space-y-4">
+                <div>
+                    <label class="block text-[11px] font-mono-tech uppercase tracking-wider text-slate-400 mb-2">Email Akun Alight Motion</label>
+                    <input type="email" id="user-email" placeholder="masukkan.email@gmail.com" class="w-full px-4 py-3 rounded-xl bg-slate-950/70 border border-slate-700/70 text-white placeholder-slate-500 focus:outline-none focus:border-teal-400 transition text-sm">
+                </div>
+                <button onclick="startProcess()" class="interactive-btn w-full py-3.5 px-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold rounded-xl flex items-center justify-center space-x-2 text-sm cursor-pointer shadow-lg">
+                    <span class="relative z-10">Mulai Proses</span>
+                    <svg class="w-4 h-4 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                </button>
+            </div>
+
+            <!-- STEP 2: Loading -->
+            <div id="step-loading" class="hidden py-7 text-center space-y-3">
+                <div class="inline-block animate-spin rounded-full h-9 w-9 border-t-2 border-b-2 border-teal-400"></div>
+                <h3 class="text-sm font-medium text-teal-300">Memproses Sinyal Terminal...</h3>
+                <p id="loading-text" class="text-xs text-slate-400">Menyiapkan modul verifikasi tautan...</p>
+            </div>
+
+            <!-- STEP 3: Input Link -->
+            <div id="step-verify" class="hidden space-y-4">
+                <div class="bg-teal-950/45 border border-teal-500/30 rounded-xl p-3 text-xs text-teal-100">
+                    <p class="font-bold mb-1 text-teal-300">Langkah Verifikasi:</p>
+                    <ol class="list-decimal list-inside space-y-1 text-slate-300 text-[11px]">
+                        <li>Buka inbox: <span id="display-email" class="text-white font-semibold underline"></span></li>
+                        <li>Salin tautan dari <b>Alight Creative</b>.</li>
+                        <li>Tempelkan pada kolom di bawah ini.</li>
+                    </ol>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-mono-tech uppercase tracking-wider text-slate-400 mb-2">Tempel Link dari Email</label>
+                    <textarea id="activation-link" rows="2" placeholder="https://alightcreative.com/verify/..." class="w-full px-4 py-2.5 rounded-xl bg-slate-950/70 border border-slate-700/70 text-white placeholder-slate-500 focus:outline-none focus:border-teal-400 transition text-xs"></textarea>
+                </div>
+
+                <button onclick="processActivation()" class="interactive-btn w-full py-3.5 px-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold rounded-xl text-sm cursor-pointer shadow-lg">
+                    <span class="relative z-10">Proses Tautan</span>
+                </button>
+            </div>
+
+            <!-- STEP 4: Selesai -->
+            <div id="step-success" class="hidden py-5 text-center space-y-3">
+                <div class="w-12 h-12 bg-emerald-500/20 border border-emerald-400 text-emerald-300 rounded-full flex items-center justify-center mx-auto text-lg font-bold">✓</div>
+                <h3 class="text-base font-bold text-white">Tautan Berhasil Dibaca!</h3>
+                <p class="text-xs text-slate-300">Proses lokal selesai. Klik tombol di bawah untuk mengulang.</p>
+                <button onclick="resetWithEffect()" class="interactive-btn px-5 py-2.5 bg-slate-800/80 hover:bg-slate-700/80 border border-slate-600/50 text-xs font-semibold rounded-xl cursor-pointer">
+                    <span class="relative z-10">Ulangi / Reset</span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // =========================================================
+        // 1. BUTTON CLICK RIPPLE & FORM LOGIC
+        // =========================================================
+        document.addEventListener('pointerdown', (e) => {
+            const btn = e.target.closest('.interactive-btn');
+            if (!btn) return;
+
+            const rect = btn.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const maxDim = Math.max(rect.width, rect.height);
+
+            const wave = document.createElement('span');
+            wave.className = 'btn-click-wave';
+            wave.style.width = `${maxDim}px`;
+            wave.style.height = `${maxDim}px`;
+            wave.style.left = `${x}px`;
+            wave.style.top = `${y}px`;
+            btn.appendChild(wave);
+
+            const ring = document.createElement('span');
+            ring.className = 'btn-click-ring';
+            const ringSize = Math.min(48, maxDim * 0.45);
+            ring.style.width = `${ringSize}px`;
+            ring.style.height = `${ringSize}px`;
+            ring.style.left = `${x}px`;
+            ring.style.top = `${y}px`;
+            btn.appendChild(ring);
+
+            setTimeout(() => {
+                wave.remove();
+                ring.remove();
+            }, 700);
+        });
+
+        let userEmailInput = "";
+        function startProcess() {
+            const email = document.getElementById('user-email').value;
+            if (!email || !email.includes('@')) {
+                alert('Masukkan alamat email yang valid terlebih dahulu!');
+                return;
+            }
+            userEmailInput = email;
+            setTimeout(() => {
+                document.getElementById('step-1').classList.add('hidden');
+                document.getElementById('step-loading').classList.remove('hidden');
+                setTimeout(() => {
+                    document.getElementById('step-loading').classList.add('hidden');
+                    document.getElementById('step-verify').classList.remove('hidden');
+                    document.getElementById('display-email').innerText = userEmailInput;
+                }, 1300);
+            }, 180);
+        }
+
+        function processActivation() {
+            const link = document.getElementById('activation-link').value;
+            if (!link.trim()) {
+                alert('Harap tempelkan tautan terlebih dahulu!');
+                return;
+            }
+            setTimeout(() => {
+                document.getElementById('step-verify').classList.add('hidden');
+                document.getElementById('step-loading').classList.remove('hidden');
+                document.getElementById('loading-text').innerText = "Memvalidasi format tautan...";
+                setTimeout(() => {
+                    document.getElementById('step-loading').classList.add('hidden');
+                    document.getElementById('step-success').classList.remove('hidden');
+                }, 1100);
+            }, 180);
+        }
+
+        function resetWithEffect() {
+            setTimeout(() => location.reload(), 250);
+        }
+
+        // =========================================================
+        // 2. OUTER SPACE & PASSING ASTEROIDS ENGINE
+        // =========================================================
+        const spaceCanvas = document.getElementById('space-canvas');
+        const sCtx = spaceCanvas.getContext('2d');
+        let sWidth = 0, sHeight = 0;
+        let stars = [];
+        let asteroids = [];
+        let nextAsteroidTimer = 1.5;
+
+        function initSpace() {
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            sWidth = window.innerWidth;
+            sHeight = window.innerHeight;
+            spaceCanvas.width = sWidth * dpr;
+            spaceCanvas.height = sHeight * dpr;
+            sCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+            const starCount = Math.floor((sWidth * sHeight) / 6500);
+            stars = [];
+            for (let i = 0; i < starCount; i++) {
+                stars.push({
+                    x: Math.random() * sWidth,
+                    y: Math.random() * sHeight,
+                    r: Math.random() * 1.6 + 0.3,
+                    alpha: Math.random() * 0.8 + 0.2,
+                    twinkleSpeed: Math.random() * 2 + 0.5,
+                    phase: Math.random() * Math.PI * 2,
+                    tint: Math.random() > 0.82 ? '#99f6e4' : (Math.random() > 0.7 ? '#bae6fd' : '#ffffff')
+                });
+            }
+        }
+
+        function spawnAsteroid() {
+            const fromLeft = Math.random() > 0.5;
+            const radius = 16 + Math.random() * 34;
+            const startX = fromLeft ? -radius * 2.5 : sWidth + radius * 2.5;
+            const startY = sHeight * (0.1 + Math.random() * 0.75);
+            const speed = 55 + Math.random() * 95;
+            const angle = fromLeft
+                ? (Math.random() * 0.45 - 0.22)
+                : (Math.PI + (Math.random() * 0.45 - 0.22));
+
+            // Generate jagged rocky polygon vertices
+            const vertices = [];
+            const pts = 11;
+            for (let i = 0; i < pts; i++) {
+                const a = (i / pts) * Math.PI * 2;
+                const dist = radius * (0.76 + Math.random() * 0.34);
+                vertices.push({ x: Math.cos(a) * dist, y: Math.sin(a) * dist });
+            }
+
+            // Generate surface craters
+            const craters = [];
+            const craterCount = 3 + Math.floor(Math.random() * 3);
+            for (let c = 0; c < craterCount; c++) {
+                const ca = Math.random() * Math.PI * 2;
+                const cd = Math.random() * radius * 0.45;
+                craters.push({
+                    x: Math.cos(ca) * cd,
+                    y: Math.sin(ca) * cd,
+                    r: radius * (0.12 + Math.random() * 0.14)
+                });
+            }
+
+            asteroids.push({
+                x: startX,
+                y: startY,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                radius: radius,
+                rot: Math.random() * Math.PI * 2,
+                rotSpeed: (Math.random() - 0.5) * 0.9,
+                vertices: vertices,
+                craters: craters
+            });
+        }
+
+        function renderSpace(dt, nowSec) {
+            // Deep Space Backdrop
+            const bg = sCtx.createRadialGradient(sWidth * 0.3, sHeight * 0.25, 40, sWidth * 0.5, sHeight * 0.5, Math.max(sWidth, sHeight) * 0.9);
+            bg.addColorStop(0, '#091326');
+            bg.addColorStop(0.5, '#040814');
+            bg.addColorStop(1, '#010206');
+            sCtx.fillStyle = bg;
+            sCtx.fillRect(0, 0, sWidth, sHeight);
+
+            // Subtle Distant Nebula Glow
+            const neb = sCtx.createRadialGradient(sWidth * 0.75, sHeight * 0.65, 10, sWidth * 0.75, sHeight * 0.65, sWidth * 0.4);
+            neb.addColorStop(0, 'rgba(13, 148, 136, 0.08)');
+            neb.addColorStop(1, 'transparent');
+            sCtx.fillStyle = neb;
+            sCtx.fillRect(0, 0, sWidth, sHeight);
+
+            // Twinkling Stars
+            for (let i = 0; i < stars.length; i++) {
+                const st = stars[i];
+                const flicker = 0.65 + 0.35 * Math.sin(nowSec * st.twinkleSpeed + st.phase);
+                sCtx.globalAlpha = st.alpha * flicker;
+                sCtx.fillStyle = st.tint;
+                sCtx.beginPath();
+                sCtx.arc(st.x, st.y, st.r, 0, Math.PI * 2);
+                sCtx.fill();
+            }
+            sCtx.globalAlpha = 1;
+
+            // Occasional Asteroids
+            nextAsteroidTimer -= dt;
+            if (nextAsteroidTimer <= 0) {
+                spawnAsteroid();
+                nextAsteroidTimer = 3.5 + Math.random() * 4.5; // Passes every 3.5 - 8 seconds
+            }
+
+            for (let i = asteroids.length - 1; i >= 0; i--) {
+                const ast = asteroids[i];
+                ast.x += ast.vx * dt;
+                ast.y += ast.vy * dt;
+                ast.rot += ast.rotSpeed * dt;
+
+                // Faint cosmic dust wake behind asteroid
+                sCtx.save();
+                const tailX = ast.x - ast.vx * 0.9;
+                const tailY = ast.y - ast.vy * 0.9;
+                const trailGrad = sCtx.createLinearGradient(ast.x, ast.y, tailX, tailY);
+                trailGrad.addColorStop(0, 'rgba(148, 163, 184, 0.16)');
+                trailGrad.addColorStop(1, 'transparent');
+                sCtx.strokeStyle = trailGrad;
+                sCtx.lineWidth = ast.radius * 0.7;
+                sCtx.lineCap = 'round';
+                sCtx.beginPath();
+                sCtx.moveTo(ast.x, ast.y);
+                sCtx.lineTo(tailX, tailY);
+                sCtx.stroke();
+                sCtx.restore();
+
+                // Draw 3D-shaded asteroid body
+                sCtx.save();
+                sCtx.translate(ast.x, ast.y);
+                sCtx.rotate(ast.rot);
+
+                sCtx.beginPath();
+                ast.vertices.forEach((v, idx) => {
+                    if (idx === 0) sCtx.moveTo(v.x, v.y);
+                    else sCtx.lineTo(v.x, v.y);
+                });
+                sCtx.closePath();
+
+                const rockGrad = sCtx.createRadialGradient(-ast.radius * 0.3, -ast.radius * 0.3, 2, 0, 0, ast.radius * 1.2);
+                rockGrad.addColorStop(0, '#64748b');
+                rockGrad.addColorStop(0.55, '#334155');
+                rockGrad.addColorStop(1, '#0f172a');
+                sCtx.fillStyle = rockGrad;
+                sCtx.fill();
+                sCtx.lineWidth = 1;
+                sCtx.strokeStyle = 'rgba(148, 163, 184, 0.25)';
+                sCtx.stroke();
+
+                // Craters
+                ast.craters.forEach(c => {
+                    sCtx.beginPath();
+                    sCtx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+                    sCtx.fillStyle = 'rgba(15, 23, 42, 0.55)';
+                    sCtx.fill();
+                });
+
+                sCtx.restore();
+
+                // Remove when far off-screen
+                if (ast.x < -ast.radius * 4 || ast.x > sWidth + ast.radius * 4 || ast.y < -ast.radius * 4 || ast.y > sHeight + ast.radius * 4) {
+                    asteroids.splice(i, 1);
+                }
+            }
+        }
+
+        // =========================================================
+        // 3. 3D ALIGHT MOTION LOGO (BOUNCE, DRAG, SHATTER & RESPAWN)
+        // =========================================================
+        const logoCanvas = document.getElementById('logo-canvas');
+        const lCtx = logoCanvas.getContext('2d');
+        const hudStatus = document.getElementById('hud-logo-status');
+
+        let lWidth = 0, lHeight = 0;
+
+        // 3D Logo State Machine: 'floating' | 'dragging' | 'shattered' | 'entering'
+        const logo = {
+            x: 0,
+            y: 0,
+            vx: 155,
+            vy: 120,
+            radius: 44,
+            rotX: 0.2,
+            rotY: 0.3,
+            rotZ: 0,
+            vRotX: 0.85,
+            vRotY: 1.35,
+            vRotZ: 0.4,
+            state: 'floating',
+            respawnTimer: 0,
+            enterProgress: 0,
+            enterSide: 'right', // 'left' or 'right' airlock room
+            scale: 1
+        };
+
+        let dustParticles = [];
+        let bounceSparks = [];
+
+        function getWallBounds() {
+            const pad = (window.innerWidth < 640 ? 18 : 26) + logo.radius + 4;
+            return {
+                left: pad,
+                right: Math.max(pad + 50, lWidth - pad),
+                top: pad,
+                bottom: Math.max(pad + 50, lHeight - pad)
+            };
+        }
+
+        function initLogoCanvas() {
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            lWidth = window.innerWidth;
+            lHeight = window.innerHeight;
+            logoCanvas.width = lWidth * dpr;
+            logoCanvas.height = lHeight * dpr;
+            lCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+            logo.radius = lWidth < 640 ? 38 : 46;
+            if (logo.x === 0 && logo.y === 0) {
+                logo.x = lWidth * 0.25;
+                logo.y = lHeight * 0.28;
+            }
+        }
+
+        function spawnBounceSpark(x, y) {
+            for (let i = 0; i < 12; i++) {
+                const a = Math.random() * Math.PI * 2;
+                const spd = 40 + Math.random() * 110;
+                bounceSparks.push({
+                    x, y,
+                    vx: Math.cos(a) * spd,
+                    vy: Math.sin(a) * spd,
+                    life: 0.45 + Math.random() * 0.25,
+                    maxLife: 0.7
+                });
+            }
+        }
+
+        function shatterLogoIntoDust() {
+            if (logo.state === 'shattered') return;
+            logo.state = 'shattered';
+            logo.respawnTimer = 5.0;
+            isDragging = false;
+            logoCanvas.style.pointerEvents = 'none';
+            document.body.style.cursor = 'default';
+
+            const colors = ['#00f5b8', '#10b981', '#2dd4bf', '#38bdf8', '#e2e8f0', '#06b6d4'];
+            dustParticles = [];
+            const count = 175;
+            for (let i = 0; i < count; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const dist = Math.random() * logo.radius * 0.95;
+                const burstSpeed = 25 + Math.random() * 140;
+                dustParticles.push({
+                    x: logo.x + Math.cos(angle) * dist,
+                    y: logo.y + Math.sin(angle) * dist,
+                    vx: Math.cos(angle) * burstSpeed + logo.vx * 0.25,
+                    vy: Math.sin(angle) * burstSpeed + logo.vy * 0.25,
+                    size: 1.5 + Math.random() * 3.2,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    life: 3.6 + Math.random() * 1.3,
+                    maxLife: 4.9,
+                    twinkle: Math.random() * Math.PI * 2
+                });
+            }
+        }
+
+        function startEnterFromOtherRoom() {
+            logo.state = 'entering';
+            logo.enterProgress = 0;
+            logo.enterSide = Math.random() > 0.5 ? 'right' : 'left';
+            const bounds = getWallBounds();
+            logo.y = bounds.top + (bounds.bottom - bounds.top) * (0.25 + Math.random() * 0.5);
+            logo.x = logo.enterSide === 'right' ? lWidth - 22 : 22;
+            logo.scale = 0.25;
+            logo.rotX = 0.15;
+            logo.rotY = logo.enterSide === 'right' ? -0.9 : 0.9;
+            logo.rotZ = 0;
+        }
+
+        // Draw True 3D Extruded Alight Motion Emblem
+        function draw3DAlightMotionLogo(ctx, x, y, radius, rx, ry, rz, scale) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.scale(scale, scale);
+
+            // Ambient Zero-G Aura Glow
+            const aura = ctx.createRadialGradient(0, 0, radius * 0.2, 0, 0, radius * 1.55);
+            aura.addColorStop(0, 'rgba(16, 185, 129, 0.28)');
+            aura.addColorStop(0.6, 'rgba(6, 182, 212, 0.1)');
+            aura.addColorStop(1, 'transparent');
+            ctx.fillStyle = aura;
+            ctx.beginPath();
+            ctx.arc(0, 0, radius * 1.55, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Simulate 3D orientation matrix transforms using tilt projection
+            const tiltX = Math.sin(ry) * 0.38;
+            const tiltY = Math.sin(rx) * 0.38;
+            const squeezeX = Math.max(0.58, Math.cos(ry * 0.75));
+            const squeezeY = Math.max(0.58, Math.cos(rx * 0.75));
+
+            ctx.rotate(rz);
+
+            // 1. 3D Extruded Metallic Depth Layers (Back to Front)
+            const depthLayers = 10;
+            const depthOffsetX = -tiltX * 16;
+            const depthOffsetY = -tiltY * 16;
+
+            for (let d = depthLayers; d >= 1; d--) {
+                const ratio = d / depthLayers;
+                ctx.save();
+                ctx.translate(depthOffsetX * ratio, depthOffsetY * ratio);
+                ctx.scale(squeezeX, squeezeY);
+
+                ctx.beginPath();
+                ctx.arc(0, 0, radius, 0, Math.PI * 2);
+                ctx.fillStyle = d === depthLayers ? '#042f2e' : (d % 2 === 0 ? '#0d9488' : '#0f766e');
+                ctx.fill();
+                ctx.restore();
+            }
+
+            // 2. Front Face Coin / Medallion Base
+            ctx.save();
+            ctx.scale(squeezeX, squeezeY);
+
+            const faceGrad = ctx.createLinearGradient(-radius, -radius, radius, radius);
+            faceGrad.addColorStop(0, '#0f172a');
+            faceGrad.addColorStop(0.5, '#071318');
+            faceGrad.addColorStop(1, '#020617');
+            ctx.beginPath();
+            ctx.arc(0, 0, radius, 0, Math.PI * 2);
+            ctx.fillStyle = faceGrad;
+            ctx.fill();
+
+            // Outer Glowing Bezel Ring
+            ctx.lineWidth = 3;
+            const rimGrad = ctx.createLinearGradient(-radius, -radius, radius, radius);
+            rimGrad.addColorStop(0, '#5eead4');
+            rimGrad.addColorStop(0.5, '#10b981');
+            rimGrad.addColorStop(1, '#0891b2');
+            ctx.strokeStyle = rimGrad;
+            ctx.stroke();
+
+            // Inner Subtle Tech Ring
+            ctx.beginPath();
+            ctx.arc(0, 0, radius * 0.84, 0, Math.PI * 2);
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = 'rgba(45, 212, 191, 0.25)';
+            ctx.stroke();
+
+            // 3. Iconic Geometric Alight Motion 'A' Ribbon (3D Layered Fold)
+            const r = radius * 0.56;
+
+            // Left Leg of Geometric Ribbon
+            ctx.beginPath();
+            ctx.moveTo(0, -r * 1.05);
+            ctx.lineTo(-r * 0.92, r * 0.78);
+            ctx.lineTo(-r * 0.36, r * 0.78);
+            ctx.lineTo(0, r * 0.04);
+            ctx.closePath();
+            const leftGrad = ctx.createLinearGradient(0, -r, -r, r);
+            leftGrad.addColorStop(0, '#6ee7b7');
+            leftGrad.addColorStop(1, '#059669');
+            ctx.fillStyle = leftGrad;
+            ctx.fill();
+
+            // Right Leg of Geometric Ribbon (Overlapping 3D Fold)
+            ctx.beginPath();
+            ctx.moveTo(0, -r * 1.05);
+            ctx.lineTo(r * 0.92, r * 0.78);
+            ctx.lineTo(r * 0.36, r * 0.78);
+            ctx.lineTo(-r * 0.22, -r * 0.32);
+            ctx.closePath();
+            const rightGrad = ctx.createLinearGradient(0, -r, r, r);
+            rightGrad.addColorStop(0, '#5eead4');
+            rightGrad.addColorStop(1, '#0284c7');
+            ctx.fillStyle = rightGrad;
+            ctx.fill();
+
+            // Crossbar / Inner Fold Accent
+            ctx.beginPath();
+            ctx.moveTo(-r * 0.24, r * 0.32);
+            ctx.lineTo(r * 0.44, r * 0.32);
+            ctx.lineTo(r * 0.58, r * 0.62);
+            ctx.lineTo(-r * 0.38, r * 0.62);
+            ctx.closePath();
+            ctx.fillStyle = '#a7f3d0';
+            ctx.fill();
+
+            // Specular Glass Sheen Across Front Face
+            const sheen = ctx.createLinearGradient(-radius, -radius, radius * 0.5, radius * 0.5);
+            sheen.addColorStop(0, 'rgba(255, 255, 255, 0.28)');
+            sheen.addColorStop(0.45, 'rgba(255, 255, 255, 0.03)');
+            sheen.addColorStop(1, 'transparent');
+            ctx.beginPath();
+            ctx.arc(0, 0, radius - 1.5, 0, Math.PI * 2);
+            ctx.fillStyle = sheen;
+            ctx.fill();
+
+            ctx.restore();
+            ctx.restore();
+        }
+
+        // Draw Airlock Doorway Portal when Logo Enters from Adjacent Room
+        function drawAirlockPortal(ctx, side, y, progress) {
+            const doorAlpha = Math.sin(progress * Math.PI);
+            if (doorAlpha <= 0.01) return;
+
+            const wallX = side === 'right' ? lWidth - (lWidth < 640 ? 18 : 26) : (lWidth < 640 ? 18 : 26);
+            const dir = side === 'right' ? -1 : 1;
+            const doorHeight = 135 * doorAlpha;
+
+            ctx.save();
+            // Volumetric Light Beam spilling from the adjacent room
+            const beamGrad = ctx.createLinearGradient(wallX, y, wallX + dir * 180, y);
+            beamGrad.addColorStop(0, `rgba(45, 212, 191, ${0.42 * doorAlpha})`);
+            beamGrad.addColorStop(0.5, `rgba(16, 185, 129, ${0.14 * doorAlpha})`);
+            beamGrad.addColorStop(1, 'transparent');
+
+            ctx.fillStyle = beamGrad;
+            ctx.beginPath();
+            ctx.moveTo(wallX, y - doorHeight * 0.5);
+            ctx.lineTo(wallX + dir * 180, y - doorHeight * 1.15);
+            ctx.lineTo(wallX + dir * 180, y + doorHeight * 1.15);
+            ctx.lineTo(wallX, y + doorHeight * 0.5);
+            ctx.closePath();
+            ctx.fill();
+
+            // Glowing Hatch Slit on the Satellite Bulkhead Wall
+            ctx.strokeStyle = `rgba(94, 234, 212, ${0.95 * doorAlpha})`;
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(wallX, y - doorHeight * 0.5);
+            ctx.lineTo(wallX, y + doorHeight * 0.5);
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        // =========================================================
+        // 4. POINTER INTERACTION (DRAG & DOUBLE-CLICK ON 3D LOGO)
+        // =========================================================
+        let isDragging = false;
+        let dragOffsetX = 0;
+        let dragOffsetY = 0;
+        let lastDragX = 0;
+        let lastDragY = 0;
+        let lastDragTime = 0;
+        let lastTapTime = 0;
+
+        function isPointerOnLogo(clientX, clientY) {
+            if (logo.state !== 'floating' && logo.state !== 'dragging') return false;
+            return Math.hypot(clientX - logo.x, clientY - logo.y) <= logo.radius * 1.18;
+        }
+
+        // Cursor feedback on desktop hover
+        window.addEventListener('pointermove', (e) => {
+            if (isDragging) {
+                const now = performance.now();
+                const dt = Math.max(0.008, (now - lastDragTime) / 1000);
+                const newX = e.clientX - dragOffsetX;
+                const newY = e.clientY - dragOffsetY;
+
+                const bounds = getWallBounds();
+                const clampedX = Math.max(bounds.left, Math.min(bounds.right, newX));
+                const clampedY = Math.max(bounds.top, Math.min(bounds.bottom, newY));
+
+                // Track throw velocity
+                logo.vx = (clampedX - lastDragX) / dt * 0.65;
+                logo.vy = (clampedY - lastDragY) / dt * 0.65;
+
+                // Tilt 3D logo naturally based on drag direction
+                logo.rotY += (clampedX - logo.x) * 0.025;
+                logo.rotX -= (clampedY - logo.y) * 0.025;
+
+                logo.x = clampedX;
+                logo.y = clampedY;
+                lastDragX = clampedX;
+                lastDragY = clampedY;
+                lastDragTime = now;
+                return;
+            }
+
+            if (e.pointerType === 'mouse') {
+                document.body.style.cursor = isPointerOnLogo(e.clientX, e.clientY) ? 'grab' : 'default';
+            }
+        });
+
+        // Capture pointerdown so grabbing the logo works even when floating over the UI card
+        window.addEventListener('pointerdown', (e) => {
+            if (!isPointerOnLogo(e.clientX, e.clientY)) return;
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            const now = performance.now();
+            // Double-click / Double-tap detection (< 320ms)
+            if (now - lastTapTime < 320) {
+                lastTapTime = 0;
+                shatterLogoIntoDust();
+                return;
+            }
+            lastTapTime = now;
+
+            isDragging = true;
+            logo.state = 'dragging';
+            dragOffsetX = e.clientX - logo.x;
+            dragOffsetY = e.clientY - logo.y;
+            lastDragX = logo.x;
+            lastDragY = logo.y;
+            lastDragTime = now;
+            document.body.style.cursor = 'grabbing';
+        }, { capture: true });
+
+        window.addEventListener('pointerup', () => {
+            if (!isDragging) return;
+            isDragging = false;
+            logo.state = 'floating';
+            document.body.style.cursor = 'grab';
+
+            // Clamp max throw speed and ensure minimum drift speed
+            const speed = Math.hypot(logo.vx, logo.vy);
+            if (speed < 60) {
+                const a = Math.random() * Math.PI * 2;
+                logo.vx = Math.cos(a) * 145;
+                logo.vy = Math.sin(a) * 125;
+            } else if (speed > 550) {
+                logo.vx = (logo.vx / speed) * 550;
+                logo.vy = (logo.vy / speed) * 550;
+            }
+        });
+
+        // =========================================================
+        // 5. MAIN ANIMATION LOOP
+        // =========================================================
+        let lastFrameTime = performance.now();
+
+        function mainLoop(now) {
+            const dt = Math.min((now - lastFrameTime) / 1000, 0.05);
+            lastFrameTime = now;
+            const nowSec = now / 1000;
+
+            // 1. Render Outer Space & Asteroids
+            renderSpace(dt, nowSec);
+
+            // 2. Render 3D Logo Layer
+            lCtx.clearRect(0, 0, lWidth, lHeight);
+            const bounds = getWallBounds();
+
+            if (logo.state === 'floating') {
+                hudStatus.innerText = 'CORE: FLOATING';
+                logo.x += logo.vx * dt;
+                logo.y += logo.vy * dt;
+
+                logo.rotX += logo.vRotX * dt;
+                logo.rotY += logo.vRotY * dt;
+                logo.rotZ += logo.vRotZ * dt;
+
+                let bounced = false;
+                if (logo.x <= bounds.left) {
+                    logo.x = bounds.left;
+                    logo.vx = Math.abs(logo.vx);
+                    logo.vRotY = -logo.vRotY;
+                    spawnBounceSpark(logo.x - logo.radius, logo.y);
+                    bounced = true;
+                } else if (logo.x >= bounds.right) {
+                    logo.x = bounds.right;
+                    logo.vx = -Math.abs(logo.vx);
+                    logo.vRotY = -logo.vRotY;
+                    spawnBounceSpark(logo.x + logo.radius, logo.y);
+                    bounced = true;
+                }
+
+                if (logo.y <= bounds.top) {
+                    logo.y = bounds.top;
+                    logo.vy = Math.abs(logo.vy);
+                    logo.vRotX = -logo.vRotX;
+                    spawnBounceSpark(logo.x, logo.y - logo.radius);
+                    bounced = true;
+                } else if (logo.y >= bounds.bottom) {
+                    logo.y = bounds.bottom;
+                    logo.vy = -Math.abs(logo.vy);
+                    logo.vRotX = -logo.vRotX;
+                    spawnBounceSpark(logo.x, logo.y + logo.radius);
+                    bounced = true;
+                }
+
+                if (bounced) {
+                    logo.vRotZ = (Math.random() - 0.5) * 1.4;
+                }
+
+                draw3DAlightMotionLogo(lCtx, logo.x, logo.y, logo.radius, logo.rotX, logo.rotY, logo.rotZ, 1);
+
+            } else if (logo.state === 'dragging') {
+                hudStatus.innerText = 'CORE: MANUAL LOCK';
+                draw3DAlightMotionLogo(lCtx, logo.x, logo.y, logo.radius, logo.rotX, logo.rotY, logo.rotZ, 1.08);
+
+            } else if (logo.state === 'shattered') {
+                logo.respawnTimer -= dt;
+                hudStatus.innerText = `CORE: REBUILDING (${Math.max(0, logo.respawnTimer).toFixed(1)}s)`;
+
+                if (logo.respawnTimer <= 0) {
+                    startEnterFromOtherRoom();
+                }
+
+            } else if (logo.state === 'entering') {
+                hudStatus.innerText = 'CORE: AIRLOCK TRANSFER';
+                logo.enterProgress += dt / 1.35; // 1.35s smooth entrance from adjacent room
+
+                if (logo.enterProgress >= 1) {
+                    logo.enterProgress = 1;
+                    logo.state = 'floating';
+                    logo.scale = 1;
+                    const dir = logo.enterSide === 'right' ? -1 : 1;
+                    logo.vx = dir * (150 + Math.random() * 40);
+                    logo.vy = (Math.random() > 0.5 ? 1 : -1) * (110 + Math.random() * 40);
+                } else {
+                    const ease = 1 - Math.pow(1 - logo.enterProgress, 3);
+                    const startX = logo.enterSide === 'right' ? lWidth - 20 : 20;
+                    const targetX = logo.enterSide === 'right' ? bounds.right - 65 : bounds.left + 65;
+
+                    logo.x = startX + (targetX - startX) * ease;
+                    logo.scale = 0.25 + 0.75 * ease;
+                    logo.rotY = (logo.enterSide === 'right' ? -1.1 : 1.1) * (1 - ease);
+
+                    drawAirlockPortal(lCtx, logo.enterSide, logo.y, logo.enterProgress);
+                    draw3DAlightMotionLogo(lCtx, logo.x, logo.y, logo.radius, logo.rotX, logo.rotY, logo.rotZ, logo.scale);
+                }
+            }
+
+            // 3. Render Zero-G Dust Particles
+            for (let i = dustParticles.length - 1; i >= 0; i--) {
+                const p = dustParticles[i];
+                p.life -= dt;
+                if (p.life <= 0) {
+                    dustParticles.splice(i, 1);
+                    continue;
+                }
+                p.vx *= 0.985;
+                p.vy *= 0.985;
+                p.x += p.vx * dt;
+                p.y += p.vy * dt;
+
+                const alpha = Math.min(1, p.life / (p.maxLife * 0.45));
+                lCtx.globalAlpha = alpha * (0.7 + 0.3 * Math.sin(nowSec * 8 + p.twinkle));
+                lCtx.fillStyle = p.color;
+                lCtx.beginPath();
+                lCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                lCtx.fill();
+            }
+            lCtx.globalAlpha = 1;
+
+            // 4. Render Wall Bounce Sparks
+            for (let i = bounceSparks.length - 1; i >= 0; i--) {
+                const sp = bounceSparks[i];
+                sp.life -= dt;
+                if (sp.life <= 0) {
+                    bounceSparks.splice(i, 1);
+                    continue;
+                }
+                sp.x += sp.vx * dt;
+                sp.y += sp.vy * dt;
+                lCtx.globalAlpha = sp.life / sp.maxLife;
+                lCtx.fillStyle = '#5eead4';
+                lCtx.beginPath();
+                lCtx.arc(sp.x, sp.y, 2, 0, Math.PI * 2);
+                lCtx.fill();
+            }
+            lCtx.globalAlpha = 1;
+
+            requestAnimationFrame(mainLoop);
+        }
+
+        window.addEventListener('resize', () => {
+            initSpace();
+            initLogoCanvas();
+        });
+
+        initSpace();
+        initLogoCanvas();
+        requestAnimationFrame(mainLoop);
+    </script>
 </body>
 </html>
