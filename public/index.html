@@ -258,13 +258,16 @@
         <!-- Console Card -->
         <div class="control-panel rounded-2xl p-5 sm:p-6 relative overflow-hidden pointer-events-auto">
             
+            <!-- Notifikasi Error / Status API -->
+            <div id="status-banner" class="hidden mb-4 px-3.5 py-2.5 rounded-xl text-xs font-mono-tech border"></div>
+
             <!-- STEP 1: Input Email -->
             <div id="step-1" class="space-y-4">
                 <div>
                     <label class="block text-[11px] font-mono-tech uppercase tracking-wider text-slate-400 mb-2">Email Akun Alight Motion</label>
-                    <input type="email" id="user-email" placeholder="masukkan.email@gmail.com" class="w-full px-4 py-3 rounded-xl bg-slate-950/70 border border-slate-700/70 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400 transition text-sm">
+                    <input type="email" id="user-email" placeholder="masukkan.email@gmail.com" class="w-full px-4 py-3 rounded-xl bg-slate-950/70 border border-slate-700/70 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400 transition text-sm select-text">
                 </div>
-                <button onclick="startProcess()" class="interactive-btn w-full py-3.5 px-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold rounded-xl flex items-center justify-center space-x-2 text-sm cursor-pointer shadow-lg">
+                <button id="btn-start" onclick="startProcess()" class="interactive-btn w-full py-3.5 px-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold rounded-xl flex items-center justify-center space-x-2 text-sm cursor-pointer shadow-lg">
                     <span class="relative z-10">Mulai Proses</span>
                     <svg class="w-4 h-4 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                 </button>
@@ -274,7 +277,7 @@
             <div id="step-loading" class="hidden py-7 text-center space-y-3">
                 <div class="inline-block animate-spin rounded-full h-9 w-9 border-t-2 border-b-2 border-emerald-400"></div>
                 <h3 class="text-sm font-medium text-emerald-300">Memproses Sinyal Terminal...</h3>
-                <p id="loading-text" class="text-xs text-slate-400">Menyiapkan modul verifikasi tautan...</p>
+                <p id="loading-text" class="text-xs text-slate-400">Menghubungi server aktivasi...</p>
             </div>
 
             <!-- STEP 3: Input Link -->
@@ -283,14 +286,14 @@
                     <p class="font-bold mb-1 text-emerald-300">Langkah Verifikasi:</p>
                     <ol class="list-decimal list-inside space-y-1 text-slate-300 text-[11px]">
                         <li>Buka inbox: <span id="display-email" class="text-white font-semibold underline"></span></li>
-                        <li>Salin tautan dari <b>Alight Creative</b>.</li>
+                        <li>Salin tautan login dari <b>Alight Creative</b>.</li>
                         <li>Tempelkan pada kolom di bawah ini.</li>
                     </ol>
                 </div>
 
                 <div>
                     <label class="block text-[11px] font-mono-tech uppercase tracking-wider text-slate-400 mb-2">Tempel Link dari Email</label>
-                    <textarea id="activation-link" rows="2" placeholder="https://alightcreative.com/verify/..." class="w-full px-4 py-2.5 rounded-xl bg-slate-950/70 border border-slate-700/70 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400 transition text-xs"></textarea>
+                    <textarea id="activation-link" rows="2" placeholder="https://alightcreative.com/verify/..." class="w-full px-4 py-2.5 rounded-xl bg-slate-950/70 border border-slate-700/70 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400 transition text-xs select-text"></textarea>
                 </div>
 
                 <button onclick="processActivation()" class="interactive-btn w-full py-3.5 px-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold rounded-xl text-sm cursor-pointer shadow-lg">
@@ -298,22 +301,64 @@
                 </button>
             </div>
 
-            <!-- STEP 4: Selesai -->
-            <div id="step-success" class="hidden py-5 text-center space-y-3">
+            <!-- STEP 4: Selesai & Token -->
+            <div id="step-success" class="hidden py-4 text-center space-y-3">
                 <div class="w-12 h-12 bg-emerald-500/20 border border-emerald-400 text-emerald-300 rounded-full flex items-center justify-center mx-auto text-lg font-bold">✓</div>
-                <h3 class="text-base font-bold text-white">Tautan Berhasil Dibaca!</h3>
-                <p class="text-xs text-slate-300">Proses lokal selesai. Klik tombol di bawah untuk mengulang.</p>
-                <button onclick="resetWithEffect()" class="interactive-btn px-5 py-2.5 bg-slate-800/80 hover:bg-slate-700/80 border border-slate-600/50 text-xs font-semibold rounded-xl cursor-pointer">
-                    <span class="relative z-10">Ulangi / Reset</span>
-                </button>
+                <h3 class="text-base font-bold text-white">Aktivasi Berhasil!</h3>
+                
+                <div class="bg-slate-950/80 border border-slate-700/80 rounded-xl p-3 text-left font-mono-tech text-[11px] space-y-1.5 select-text">
+                    <div class="flex justify-between"><span class="text-slate-400">EMAIL:</span> <span id="res-email" class="text-emerald-300 truncate ml-2">-</span></div>
+                    <div class="flex justify-between"><span class="text-slate-400">UID:</span> <span id="res-uid" class="text-white truncate ml-2">-</span></div>
+                    <div class="flex justify-between"><span class="text-slate-400">ORDER:</span> <span id="res-order" class="text-white truncate ml-2">-</span></div>
+                    <div class="pt-1 border-t border-slate-800">
+                        <span class="text-slate-400 block mb-1">ID TOKEN:</span>
+                        <div id="res-token" class="bg-slate-900 p-2 rounded text-[10px] text-slate-300 break-all max-h-20 overflow-y-auto">-</div>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 justify-center pt-1">
+                    <button onclick="copyToken()" class="interactive-btn px-4 py-2.5 bg-emerald-600/80 hover:bg-emerald-500 text-xs font-semibold rounded-xl cursor-pointer">
+                        <span class="relative z-10">Salin Token</span>
+                    </button>
+                    <button onclick="resetWithEffect()" class="interactive-btn px-4 py-2.5 bg-slate-800/80 hover:bg-slate-700/80 border border-slate-600/50 text-xs font-semibold rounded-xl cursor-pointer">
+                        <span class="relative z-10">Selesai / Reset</span>
+                    </button>
+                </div>
             </div>
 
         </div>
     </div>
 
+    <!-- MODAL POP-UP PEMBAYARAN SAWERIA (ORBITAL THEME) -->
+    <div id="paymentModal" style="display:none;" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm items-center justify-center p-4">
+        <div class="control-panel rounded-2xl p-6 max-w-sm w-full text-center border border-emerald-500/40">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-mono-tech bg-amber-500/15 text-amber-300 border border-amber-500/30 mb-3">
+                ACCESS LOCKED • Rp 5.000
+            </span>
+            <h3 class="text-lg font-bold text-white mb-1">Pembayaran Diperlukan</h3>
+            <p class="text-xs text-slate-300 mb-3">Email: <b id="modalUserEmail" class="text-emerald-300 font-mono-tech"></b></p>
+            <p class="text-xs text-slate-400 leading-relaxed mb-5">
+                Lakukan pembayaran <b class="text-white">Rp 5.000</b> via QRIS / E-Wallet di Saweria. Pastikan mengisi <u class="text-emerald-300">email yang sama persis</u> pada kolom email Saweria.
+            </p>
+
+            <!-- GANTI USERNAME_SAWERIA_KAMU DENGAN USERNAME SAWERIA MILIKMU -->
+            <a id="saweriaLink" href="https://saweria.co/VoidEVO" target="_blank" rel="noreferrer noopener" class="interactive-btn block w-full py-3 px-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-bold rounded-xl text-sm mb-2.5 shadow-lg">
+                🚀 BAYAR Rp 5.000 SEKARANG
+            </a>
+
+            <button onclick="retryActivation()" class="interactive-btn w-full py-2.5 px-4 bg-slate-800/90 hover:bg-slate-700 text-white border border-slate-600/60 font-semibold rounded-xl text-xs mb-3 cursor-pointer">
+                ✅ Saya Sudah Bayar (Cek Ulang)
+            </button>
+
+            <button onclick="closePaymentModal()" class="text-xs text-slate-400 hover:text-white underline cursor-pointer bg-transparent border-none">
+                Batal / Tutup
+            </button>
+        </div>
+    </div>
+
     <script>
         // =========================================================
-        // 1. BUTTON CLICK RIPPLE & FORM LOGIC
+        // 1. BUTTON CLICK RIPPLE & REAL API LOGIC
         // =========================================================
         document.addEventListener('pointerdown', (e) => {
             const btn = e.target.closest('.interactive-btn');
@@ -348,39 +393,134 @@
         });
 
         let userEmailInput = "";
-        function startProcess() {
-            const email = document.getElementById('user-email').value;
+
+        function showStatus(msg, isSuccess = false) {
+            const banner = document.getElementById('status-banner');
+            banner.textContent = msg;
+            banner.classList.remove('hidden', 'bg-red-950/60', 'border-red-500/40', 'text-red-300', 'bg-emerald-950/60', 'border-emerald-500/40', 'text-emerald-300');
+            if (isSuccess) {
+                banner.classList.add('bg-emerald-950/60', 'border-emerald-500/40', 'text-emerald-300');
+            } else {
+                banner.classList.add('bg-red-950/60', 'border-red-500/40', 'text-red-300');
+            }
+        }
+
+        function hideStatus() {
+            document.getElementById('status-banner').classList.add('hidden');
+        }
+
+        function showPaymentModal(email) {
+            document.getElementById('modalUserEmail').innerText = email;
+            document.getElementById('paymentModal').style.display = 'flex';
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').style.display = 'none';
+        }
+
+        function retryActivation() {
+            closePaymentModal();
+            startProcess();
+        }
+
+        async function startProcess() {
+            hideStatus();
+            const email = document.getElementById('user-email').value.trim();
             if (!email || !email.includes('@')) {
-                alert('Masukkan alamat email yang valid terlebih dahulu!');
+                showStatus('Masukkan alamat email yang valid terlebih dahulu!');
                 return;
             }
             userEmailInput = email;
-            setTimeout(() => {
-                document.getElementById('step-1').classList.add('hidden');
-                document.getElementById('step-loading').classList.remove('hidden');
-                setTimeout(() => {
-                    document.getElementById('step-loading').classList.add('hidden');
+
+            document.getElementById('step-1').classList.add('hidden');
+            document.getElementById('step-loading').classList.remove('hidden');
+            document.getElementById('loading-text').innerText = "Memeriksa status pembayaran & mengirim link...";
+
+            try {
+                const res = await fetch('/api/send-link', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: userEmailInput })
+                });
+                const data = await res.json();
+
+                document.getElementById('step-loading').classList.add('hidden');
+
+                if (res.status === 403) {
+                    // Belum bayar -> kembali ke step 1 & munculkan pop-up pembayaran
+                    document.getElementById('step-1').classList.remove('hidden');
+                    showStatus(data.message || 'Email ini belum melakukan pembayaran Rp 5.000.');
+                    showPaymentModal(userEmailInput);
+                    return;
+                }
+
+                if (data.success) {
+                    showStatus('Link login terkirim! Silakan cek inbox/spam email Anda.', true);
                     document.getElementById('step-verify').classList.remove('hidden');
                     document.getElementById('display-email').innerText = userEmailInput;
-                }, 1300);
-            }, 180);
+                } else {
+                    document.getElementById('step-1').classList.remove('hidden');
+                    showStatus(data.message || 'Gagal mengirim link aktivasi.');
+                }
+            } catch (err) {
+                document.getElementById('step-loading').classList.add('hidden');
+                document.getElementById('step-1').classList.remove('hidden');
+                showStatus('Gagal terhubung ke server.');
+            }
         }
 
-        function processActivation() {
-            const link = document.getElementById('activation-link').value;
-            if (!link.trim()) {
-                alert('Harap tempelkan tautan terlebih dahulu!');
+        async function processActivation() {
+            hideStatus();
+            const link = document.getElementById('activation-link').value.trim();
+            if (!link) {
+                showStatus('Harap tempelkan tautan dari email terlebih dahulu!');
                 return;
             }
-            setTimeout(() => {
-                document.getElementById('step-verify').classList.add('hidden');
-                document.getElementById('step-loading').classList.remove('hidden');
-                document.getElementById('loading-text').innerText = "Memvalidasi format tautan...";
-                setTimeout(() => {
-                    document.getElementById('step-loading').classList.add('hidden');
+
+            document.getElementById('step-verify').classList.add('hidden');
+            document.getElementById('step-loading').classList.remove('hidden');
+            document.getElementById('loading-text').innerText = "Memverifikasi tautan & membuat token...";
+
+            try {
+                const res = await fetch('/api/verify-link', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ link: link, email: userEmailInput })
+                });
+                const data = await res.json();
+
+                document.getElementById('step-loading').classList.add('hidden');
+
+                if (res.status === 403) {
+                    document.getElementById('step-verify').classList.remove('hidden');
+                    showStatus(data.message || 'Akses ditolak: Silakan bayar Rp 5.000 terlebih dahulu.');
+                    showPaymentModal(userEmailInput);
+                    return;
+                }
+
+                if (data.success) {
+                    const d = data.data || {};
+                    document.getElementById('res-email').textContent = d.email || userEmailInput;
+                    document.getElementById('res-uid').textContent = d.uid || '-';
+                    document.getElementById('res-order').textContent = d.orderId || '-';
+                    document.getElementById('res-token').textContent = d.idToken || JSON.stringify(d);
                     document.getElementById('step-success').classList.remove('hidden');
-                }, 1100);
-            }, 180);
+                } else {
+                    document.getElementById('step-verify').classList.remove('hidden');
+                    showStatus(data.message || 'Tautan tidak valid atau sudah kedaluwarsa.');
+                }
+            } catch (err) {
+                document.getElementById('step-loading').classList.add('hidden');
+                document.getElementById('step-verify').classList.remove('hidden');
+                showStatus('Gagal terhubung ke server.');
+            }
+        }
+
+        function copyToken() {
+            const tokenText = document.getElementById('res-token').textContent;
+            navigator.clipboard.writeText(tokenText).then(() => {
+                showStatus('Token berhasil disalin ke clipboard!', true);
+            });
         }
 
         function resetWithEffect() {
@@ -572,7 +712,7 @@
             vRotX: 0.85,
             vRotY: 1.35,
             vRotZ: 0.35,
-            state: 'floating', // 'floating' | 'dragging' | 'shattered' | 'entering'
+            state: 'floating',
             respawnTimer: 0,
             enterProgress: 0,
             enterSide: 'right',
@@ -663,7 +803,6 @@
             logo.rotZ = 0;
         }
 
-        // Helper: Rounded Square Path
         function drawRoundedBox(ctx, size, cornerR) {
             const half = size / 2;
             ctx.beginPath();
@@ -679,7 +818,6 @@
             ctx.closePath();
         }
 
-        // Helper: Tapered Crescent Spiral Arc (Sharp Tail -> Thick Rounded Cap)
         function drawTaperedArc(ctx, cx, cy, arcR, startDeg, endDeg, maxThick) {
             const startRad = (startDeg * Math.PI) / 180;
             const endRad = (endDeg * Math.PI) / 180;
@@ -691,7 +829,6 @@
             for (let i = 0; i <= steps; i++) {
                 const t = i / steps;
                 const ang = startRad + t * (endRad - startRad);
-                // Smooth taper from needle-thin tail (t=0) to full thickness (t=1)
                 const w = (0.2 + (maxThick - 0.2) * Math.pow(t, 1.12)) * 0.5;
                 outerPts.push({
                     x: cx + (arcR + w) * Math.cos(ang),
@@ -709,7 +846,6 @@
                 ctx.lineTo(outerPts[i].x, outerPts[i].y);
             }
 
-            // Rounded semicircular cap at the thick end
             const capX = cx + arcR * Math.cos(endRad);
             const capY = cy + arcR * Math.sin(endRad);
             ctx.arc(capX, capY, maxThick * 0.5, endRad, endRad + Math.PI, false);
@@ -721,13 +857,11 @@
             ctx.fill();
         }
 
-        // Render Official Alight Motion 3-Swirl Emblem in 3D
         function draw3DAlightMotionLogo(ctx, x, y, radius, rx, ry, rz, scale) {
             ctx.save();
             ctx.translate(x, y);
             ctx.scale(scale, scale);
 
-            // Ambient Mint-Green Zero-G Glow
             const aura = ctx.createRadialGradient(0, 0, radius * 0.2, 0, 0, radius * 1.65);
             aura.addColorStop(0, 'rgba(14, 245, 154, 0.26)');
             aura.addColorStop(0.6, 'rgba(16, 185, 129, 0.08)');
@@ -737,7 +871,6 @@
             ctx.arc(0, 0, radius * 1.65, 0, Math.PI * 2);
             ctx.fill();
 
-            // 3D Tilt & Perspective Foreshortening
             const tiltX = Math.sin(ry) * 0.42;
             const tiltY = Math.sin(rx) * 0.42;
             const squeezeX = Math.max(0.58, Math.cos(ry * 0.72));
@@ -748,7 +881,6 @@
             const boxSize = radius * 1.72;
             const cornerR = radius * 0.42;
 
-            // 1. 3D Extruded Navy-Steel Tile Thickness (Back to Front)
             const depthLayers = 11;
             const depthOffsetX = -tiltX * 18;
             const depthOffsetY = -tiltY * 18;
@@ -765,7 +897,6 @@
                 ctx.restore();
             }
 
-            // 2. Front App Icon Base (Dark Navy-Blue matching Alight Motion Icon)
             ctx.save();
             ctx.scale(squeezeX, squeezeY);
 
@@ -780,7 +911,6 @@
             ctx.fillStyle = iconBg;
             ctx.fill();
 
-            // Crisp Metallic Rim Highlight
             ctx.lineWidth = 2;
             const rimGrad = ctx.createLinearGradient(-boxSize / 2, -boxSize / 2, boxSize / 2, boxSize / 2);
             rimGrad.addColorStop(0, 'rgba(110, 231, 183, 0.65)');
@@ -789,14 +919,11 @@
             ctx.strokeStyle = rimGrad;
             ctx.stroke();
 
-            // 3. Official Alight Motion Three Concentric Tapered Swirl Arcs
-            // Slight 3D parallax elevation for the mint arcs above the navy base
             const swirlLiftX = tiltX * 4.5;
             const swirlLiftY = tiltY * 4.5;
             const swirlCenterX = swirlLiftX;
             const swirlCenterY = radius * 0.04 + swirlLiftY;
 
-            // Shadow cast by the 3D arcs onto the navy tile
             ctx.save();
             ctx.translate(-swirlLiftX * 0.6 + 1.5, -swirlLiftY * 0.6 + 2.5);
             ctx.fillStyle = 'rgba(2, 6, 18, 0.65)';
@@ -805,7 +932,6 @@
             drawTaperedArc(ctx, 0, radius * 0.04, radius * 0.26, 256, 524, radius * 0.108);
             ctx.restore();
 
-            // Vibrant Mint-Green 3D Swirl Arcs (#0ef59a -> #00d984)
             const mintGrad = ctx.createLinearGradient(-radius * 0.6, -radius * 0.6, radius * 0.6, radius * 0.6);
             mintGrad.addColorStop(0, '#4ade80');
             mintGrad.addColorStop(0.45, '#0ef59a');
@@ -815,16 +941,12 @@
             ctx.shadowColor = 'rgba(14, 245, 154, 0.55)';
             ctx.shadowBlur = 10;
 
-            // Outer Arc (sweeps from upper-left thin tip to right-lower thick cap)
             drawTaperedArc(ctx, swirlCenterX, swirlCenterY, radius * 0.58, 192, 370, radius * 0.115);
-            // Middle Arc (sweeps from top-left thin tip to bottom-right thick cap)
             drawTaperedArc(ctx, swirlCenterX, swirlCenterY, radius * 0.42, 224, 415, radius * 0.112);
-            // Inner Arc (sweeps from top thin tip around bottom to lower-left thick cap)
             drawTaperedArc(ctx, swirlCenterX, swirlCenterY, radius * 0.26, 256, 524, radius * 0.108);
 
             ctx.shadowBlur = 0;
 
-            // Subtle Glass Specular Reflection Across Front Tile
             drawRoundedBox(ctx, boxSize - 2, cornerR - 1);
             const sheen = ctx.createLinearGradient(-boxSize / 2, -boxSize / 2, boxSize * 0.35, boxSize * 0.35);
             sheen.addColorStop(0, 'rgba(255, 255, 255, 0.22)');
@@ -837,7 +959,6 @@
             ctx.restore();
         }
 
-        // Draw Airlock Doorway Portal when Logo Enters from Adjacent Room
         function drawAirlockPortal(ctx, side, y, progress) {
             const doorAlpha = Math.sin(progress * Math.PI);
             if (doorAlpha <= 0.01) return;
@@ -1053,7 +1174,6 @@
                 }
             }
 
-            // Render Zero-G Dust Particles
             for (let i = dustParticles.length - 1; i >= 0; i--) {
                 const p = dustParticles[i];
                 p.life -= dt;
@@ -1075,7 +1195,6 @@
             }
             lCtx.globalAlpha = 1;
 
-            // Render Wall Bounce Sparks
             for (let i = bounceSparks.length - 1; i >= 0; i--) {
                 const sp = bounceSparks[i];
                 sp.life -= dt;
