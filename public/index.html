@@ -12,22 +12,31 @@
             box-sizing: border-box;
         }
 
-        body {
+        html, body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: #02040a;
+            width: 100%;
+            height: 100%;
             min-height: 100vh;
             margin: 0;
+            padding: 0;
             overflow: hidden;
+            overscroll-behavior: none;
+            touch-action: none;
             user-select: none;
             -webkit-user-select: none;
             -webkit-tap-highlight-color: transparent;
+        }
+
+        input, textarea, button, a {
+            touch-action: manipulation;
         }
 
         .font-mono-tech {
             font-family: 'JetBrains Mono', monospace;
         }
 
-        /* Layer 1: Real Outer Space Video Background (Full Edge-to-Edge) */
+        /* Layer 1: Real Outer Space Video Background */
         #space-video {
             position: fixed;
             inset: 0;
@@ -47,6 +56,7 @@
             height: 100%;
             z-index: 30;
             pointer-events: none;
+            touch-action: none;
             display: block;
         }
 
@@ -265,7 +275,6 @@
     </div>
 
     <script>
-        // Pastikan video background langsung berputar di semua browser
         const spaceVideo = document.getElementById('space-video');
         if (spaceVideo) {
             spaceVideo.play().catch(() => {});
@@ -468,7 +477,6 @@
         let dustParticles = [];
         let bounceSparks = [];
 
-        // Pantul tepat di tepi layar penuh (tanpa bingkai besi)
         function getWallBounds() {
             const pad = logo.radius + 2;
             return {
@@ -513,7 +521,7 @@
             logo.state = 'shattered';
             logo.respawnTimer = 5.0;
             isDragging = false;
-            logoCanvas.style.pointerEvents = 'none';
+            activePointerId = null;
             document.body.style.cursor = 'default';
 
             const colors = ['#0ef59a', '#12f79d', '#059669', '#34d399', '#1e293b', '#38bdf8'];
@@ -602,7 +610,6 @@
             ctx.fill();
         }
 
-        // Gambar satu sisi penuh ikon Alight Motion (normal & tidak meregang)
         function drawAlightMotionFace(ctx, radius, boxSize, cornerR) {
             drawRoundedBox(ctx, boxSize, cornerR);
             const iconBg = ctx.createRadialGradient(
@@ -625,7 +632,6 @@
 
             const swirlCenterY = radius * 0.04;
 
-            // Bayangan halus logo di atas tile
             ctx.save();
             ctx.translate(1.5, 2.5);
             ctx.fillStyle = 'rgba(2, 6, 18, 0.6)';
@@ -634,7 +640,6 @@
             drawTaperedArc(ctx, 0, swirlCenterY, radius * 0.26, 256, 524, radius * 0.108);
             ctx.restore();
 
-            // Tiga lengkungan spiral hijau mint Alight Motion
             const mintGrad = ctx.createLinearGradient(-radius * 0.6, -radius * 0.6, radius * 0.6, radius * 0.6);
             mintGrad.addColorStop(0, '#4ade80');
             mintGrad.addColorStop(0.45, '#0ef59a');
@@ -650,7 +655,6 @@
 
             ctx.shadowBlur = 0;
 
-            // Kilau kaca tipis di permukaan depan & belakang
             drawRoundedBox(ctx, boxSize - 2, cornerR - 1);
             const sheen = ctx.createLinearGradient(-boxSize / 2, -boxSize / 2, boxSize * 0.35, boxSize * 0.35);
             sheen.addColorStop(0, 'rgba(255, 255, 255, 0.2)');
@@ -660,18 +664,15 @@
             ctx.fill();
         }
 
-        // Render Koin/Tile 3D Alight Motion: Depan & Belakang Sama Persis, Berputar & Terombang-ambing Alami
         function draw3DAlightMotionLogo(ctx, x, y, radius, ry, bobPhase, scale) {
             ctx.save();
 
-            // Gerakan mengapung terombang-ambing lembut (vertikal & kemiringan alami)
             const floatBobY = Math.sin(bobPhase * 1.8) * 5.5;
             const swayRoll = Math.sin(bobPhase * 1.25) * 0.16 + Math.cos(bobPhase * 0.75) * 0.07;
 
             ctx.translate(x, y + floatBobY);
             ctx.scale(scale, scale);
 
-            // Aura cahaya lembut di sekitar logo
             const aura = ctx.createRadialGradient(0, 0, radius * 0.2, 0, 0, radius * 1.6);
             aura.addColorStop(0, 'rgba(14, 245, 154, 0.24)');
             aura.addColorStop(0.6, 'rgba(16, 185, 129, 0.07)');
@@ -691,11 +692,9 @@
             const sinY = Math.sin(ry);
             const absCosY = Math.abs(cosY);
 
-            // Sisi mana pun yang menghadap ke depan (depan atau belakang) tampil identik
             const frontOffset = (cosY >= 0 ? 1 : -1) * (thickness * 0.5) * sinY;
             const backOffset = -frontOffset;
 
-            // 1. Gambar ketebalan sisi 3D (terlihat mulus saat berputar ke samping)
             const edgeSteps = 10;
             for (let i = 0; i <= edgeSteps; i++) {
                 const t = i / edgeSteps;
@@ -709,7 +708,6 @@
                 ctx.restore();
             }
 
-            // 2. Gambar permukaan wajah ikon (sama persis di sisi depan maupun sisi belakang)
             if (absCosY > 0.01) {
                 ctx.save();
                 ctx.translate(frontOffset, 0);
@@ -747,9 +745,10 @@
         }
 
         // =========================================================
-        // 3. POINTER INTERACTION (DRAG & DOUBLE-CLICK ON 3D LOGO)
+        // 3. POINTER & MOBILE TOUCH INTERACTION (SMOOTH DRAG)
         // =========================================================
         let isDragging = false;
+        let activePointerId = null;
         let dragOffsetX = 0;
         let dragOffsetY = 0;
         let lastDragX = 0;
@@ -757,41 +756,55 @@
         let lastDragTime = 0;
         let lastTapTime = 0;
 
-        function isPointerOnLogo(clientX, clientY) {
+        function isPointerOnLogo(clientX, clientY, pointerType = 'mouse') {
             if (logo.state !== 'floating' && logo.state !== 'dragging') return false;
-            return Math.hypot(clientX - logo.x, clientY - logo.y) <= logo.radius * 1.25;
+            const hitScale = pointerType === 'touch' ? 1.65 : 1.25;
+            return Math.hypot(clientX - logo.x, clientY - logo.y) <= logo.radius * hitScale;
         }
 
-        window.addEventListener('pointermove', (e) => {
-            if (isDragging) {
-                const now = performance.now();
-                const dt = Math.max(0.008, (now - lastDragTime) / 1000);
-                const newX = e.clientX - dragOffsetX;
-                const newY = e.clientY - dragOffsetY;
+        function updateDragPosition(clientX, clientY) {
+            const now = performance.now();
+            const dt = Math.max(0.008, (now - lastDragTime) / 1000);
+            const newX = clientX - dragOffsetX;
+            const newY = clientY - dragOffsetY;
 
-                const bounds = getWallBounds();
-                const clampedX = Math.max(bounds.left, Math.min(bounds.right, newX));
-                const clampedY = Math.max(bounds.top, Math.min(bounds.bottom, newY));
+            const bounds = getWallBounds();
+            const clampedX = Math.max(bounds.left, Math.min(bounds.right, newX));
+            const clampedY = Math.max(bounds.top, Math.min(bounds.bottom, newY));
 
-                logo.vx = (clampedX - lastDragX) / dt * 0.65;
-                logo.vy = (clampedY - lastDragY) / dt * 0.65;
-                logo.rotY += (clampedX - logo.x) * 0.03;
+            logo.vx = ((clampedX - lastDragX) / dt) * 0.65;
+            logo.vy = ((clampedY - lastDragY) / dt) * 0.65;
+            logo.rotY += (clampedX - logo.x) * 0.03;
 
-                logo.x = clampedX;
-                logo.y = clampedY;
-                lastDragX = clampedX;
-                lastDragY = clampedY;
-                lastDragTime = now;
-                return;
+            logo.x = clampedX;
+            logo.y = clampedY;
+            lastDragX = clampedX;
+            lastDragY = clampedY;
+            lastDragTime = now;
+        }
+
+        function releaseDrag() {
+            if (!isDragging) return;
+            isDragging = false;
+            activePointerId = null;
+            if (logo.state === 'dragging') {
+                logo.state = 'floating';
             }
+            document.body.style.cursor = 'default';
 
-            if (e.pointerType === 'mouse') {
-                document.body.style.cursor = isPointerOnLogo(e.clientX, e.clientY) ? 'grab' : 'default';
+            const speed = Math.hypot(logo.vx, logo.vy);
+            if (speed < 60) {
+                const a = Math.random() * Math.PI * 2;
+                logo.vx = Math.cos(a) * 140;
+                logo.vy = Math.sin(a) * 120;
+            } else if (speed > 520) {
+                logo.vx = (logo.vx / speed) * 520;
+                logo.vy = (logo.vy / speed) * 520;
             }
-        });
+        }
 
         window.addEventListener('pointerdown', (e) => {
-            if (!isPointerOnLogo(e.clientX, e.clientY)) return;
+            if (!isPointerOnLogo(e.clientX, e.clientY, e.pointerType)) return;
 
             e.preventDefault();
             e.stopPropagation();
@@ -805,6 +818,7 @@
             lastTapTime = now;
 
             isDragging = true;
+            activePointerId = e.pointerId;
             logo.state = 'dragging';
             dragOffsetX = e.clientX - logo.x;
             dragOffsetY = e.clientY - logo.y;
@@ -812,24 +826,34 @@
             lastDragY = logo.y;
             lastDragTime = now;
             document.body.style.cursor = 'grabbing';
-        }, { capture: true });
+        }, { capture: true, passive: false });
 
-        window.addEventListener('pointerup', () => {
-            if (!isDragging) return;
-            isDragging = false;
-            logo.state = 'floating';
-            document.body.style.cursor = 'grab';
-
-            const speed = Math.hypot(logo.vx, logo.vy);
-            if (speed < 60) {
-                const a = Math.random() * Math.PI * 2;
-                logo.vx = Math.cos(a) * 140;
-                logo.vy = Math.sin(a) * 120;
-            } else if (speed > 520) {
-                logo.vx = (logo.vx / speed) * 520;
-                logo.vy = (logo.vy / speed) * 520;
+        window.addEventListener('pointermove', (e) => {
+            if (isDragging) {
+                if (activePointerId !== null && e.pointerId !== activePointerId) return;
+                e.preventDefault();
+                updateDragPosition(e.clientX, e.clientY);
+                return;
             }
-        });
+
+            if (e.pointerType === 'mouse') {
+                document.body.style.cursor = isPointerOnLogo(e.clientX, e.clientY, 'mouse') ? 'grab' : 'default';
+            }
+        }, { capture: true, passive: false });
+
+        // Cadangan khusus layar sentuh HP agar browser tidak memotong geseran jari
+        window.addEventListener('touchmove', (e) => {
+            if (!isDragging || e.touches.length === 0) return;
+            e.preventDefault();
+            const touch = e.touches[0];
+            updateDragPosition(touch.clientX, touch.clientY);
+        }, { capture: true, passive: false });
+
+        window.addEventListener('pointerup', releaseDrag, { capture: true });
+        window.addEventListener('pointercancel', releaseDrag, { capture: true });
+        window.addEventListener('touchend', releaseDrag, { capture: true });
+        window.addEventListener('touchcancel', releaseDrag, { capture: true });
+        window.addEventListener('blur', releaseDrag);
 
         // =========================================================
         // 4. MAIN ANIMATION LOOP
