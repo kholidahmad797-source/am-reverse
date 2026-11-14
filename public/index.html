@@ -27,100 +27,19 @@
             font-family: 'JetBrains Mono', monospace;
         }
 
-        /* Layer 1: Outer Space & Asteroids */
-        #space-canvas {
+        /* Layer 1: Real Outer Space Video Background (Full Edge-to-Edge) */
+        #space-video {
             position: fixed;
             inset: 0;
             width: 100%;
             height: 100%;
+            object-fit: cover;
             z-index: 1;
-            display: block;
-        }
-
-        /* Layer 2: Glass Reflection & Subtle Tint inside Satellite Viewport */
-        .satellite-glass {
-            position: fixed;
-            inset: 0;
-            z-index: 2;
             pointer-events: none;
-            background: 
-                linear-gradient(125deg, rgba(255, 255, 255, 0.045) 0%, rgba(255, 255, 255, 0.01) 32%, transparent 55%),
-                radial-gradient(circle at 50% 50%, transparent 55%, rgba(2, 6, 16, 0.55) 100%);
-            box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.85);
+            background-color: #02040a;
         }
 
-        /* Layer 3: Heavy Steel Satellite Window Frame (Edges & Corners) */
-        .satellite-frame {
-            position: fixed;
-            inset: 0;
-            z-index: 15;
-            pointer-events: none;
-            border: 18px solid #141923;
-            box-shadow:
-                inset 0 0 0 3px #2b3547,
-                inset 0 0 0 6px #0b0e14,
-                inset 0 12px 28px rgba(0, 0, 0, 0.9),
-                inset 0 -12px 28px rgba(0, 0, 0, 0.9);
-        }
-
-        @media (min-width: 640px) {
-            .satellite-frame {
-                border-width: 26px;
-            }
-        }
-
-        /* Metallic Corner Gussets / Steel Brackets */
-        .steel-corner {
-            position: fixed;
-            width: 74px;
-            height: 74px;
-            z-index: 16;
-            pointer-events: none;
-            background: linear-gradient(135deg, #273040 0%, #131822 65%, #0c0f16 100%);
-            border: 1px solid rgba(148, 163, 184, 0.25);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.15);
-        }
-        .steel-corner::after {
-            content: "";
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 35% 35%, #94a3b8, #1e293b);
-            box-shadow: 0 1px 2px rgba(0,0,0,0.9);
-        }
-        .corner-tl { top: 0; left: 0; clip-path: polygon(0 0, 100% 0, 0 100%); }
-        .corner-tl::after { top: 14px; left: 14px; }
-
-        .corner-tr { top: 0; right: 0; clip-path: polygon(0 0, 100% 0, 100% 100%); }
-        .corner-tr::after { top: 14px; right: 14px; }
-
-        .corner-bl { bottom: 0; left: 0; clip-path: polygon(0 0, 0 100%, 100% 100%); }
-        .corner-bl::after { bottom: 14px; left: 14px; }
-
-        .corner-br { bottom: 0; right: 0; clip-path: polygon(100% 0, 0 100%, 100% 100%); }
-        .corner-br::after { bottom: 14px; right: 14px; }
-
-        /* Steel Window Mullion Bars */
-        .steel-beam-top, .steel-beam-bottom {
-            position: fixed;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 240px;
-            height: 8px;
-            background: linear-gradient(180deg, #2c3648, #131822);
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            z-index: 16;
-            pointer-events: none;
-        }
-        .steel-beam-top { top: 16px; border-radius: 0 0 8px 8px; }
-        .steel-beam-bottom { bottom: 16px; border-radius: 8px 8px 0 0; }
-        @media (min-width: 640px) {
-            .steel-beam-top { top: 24px; }
-            .steel-beam-bottom { bottom: 24px; }
-        }
-
-        /* Layer 4: 3D Floating Alight Motion Logo & Airlock Canvas */
+        /* Layer 2: 3D Floating Alight Motion Logo Canvas */
         #logo-canvas {
             position: fixed;
             inset: 0;
@@ -131,11 +50,11 @@
             display: block;
         }
 
-        /* Layer 5: Aerospace Control Panel Card */
+        /* Layer 3: Aerospace Control Panel Card */
         .control-panel {
-            background: rgba(11, 16, 28, 0.76);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            background: rgba(11, 16, 28, 0.72);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             border: 1px solid rgba(16, 245, 156, 0.24);
             box-shadow:
                 0 24px 60px rgba(0, 0, 0, 0.8),
@@ -214,45 +133,35 @@
 </head>
 <body class="text-white flex items-center justify-center p-6 sm:p-10 relative">
 
-    <!-- Layer 1: Outer Space & Passing Asteroids -->
-    <canvas id="space-canvas"></canvas>
+    <!-- Layer 1: Real Outer Space Video Background -->
+    <video id="space-video" autoplay muted loop playsinline preload="auto">
+        <source src="/space.mp4" type="video/mp4">
+    </video>
 
-    <!-- Layer 2: Wide Glass Reflection -->
-    <div class="satellite-glass"></div>
-
-    <!-- Layer 3: Satellite Metallic Frame & Structural Brackets -->
-    <div class="satellite-frame"></div>
-    <div class="steel-corner corner-tl"></div>
-    <div class="steel-corner corner-tr"></div>
-    <div class="steel-corner corner-bl"></div>
-    <div class="steel-corner corner-br"></div>
-    <div class="steel-beam-top"></div>
-    <div class="steel-beam-bottom"></div>
-
-    <!-- Telemetry HUD Labels on Satellite Frame -->
-    <div class="fixed top-7 sm:top-9 left-16 sm:left-24 z-20 pointer-events-none hidden sm:flex items-center space-x-3 text-[10px] font-mono-tech tracking-widest text-slate-400/80">
+    <!-- Minimal Telemetry HUD Labels -->
+    <div class="fixed top-4 left-5 z-20 pointer-events-none hidden sm:flex items-center space-x-2.5 text-[10px] font-mono-tech tracking-widest text-slate-300/75">
         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>SAT-DECK 04 // ZERO-G CHAMBER</span>
+        <span>DEEP SPACE // ZERO-G ORBIT</span>
     </div>
-    <div id="hud-logo-status" class="fixed top-7 sm:top-9 right-16 sm:right-24 z-20 pointer-events-none text-[10px] font-mono-tech tracking-widest text-emerald-400/90">
+    <div id="hud-logo-status" class="fixed top-4 right-5 z-20 pointer-events-none text-[10px] font-mono-tech tracking-widest text-emerald-400/85">
         CORE: FLOATING
     </div>
 
-    <!-- Layer 4: Interactive 3D Alight Motion Logo -->
+    <!-- Layer 2: Interactive 3D Alight Motion Logo -->
     <canvas id="logo-canvas"></canvas>
 
-    <!-- Layer 5: Main Console Card -->
+    <!-- Layer 3: Main Console Card -->
     <div class="w-full max-w-sm sm:max-w-md relative z-20 pointer-events-none">
         
         <!-- Header -->
         <div class="text-center mb-4">
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-mono-tech bg-slate-900/85 text-emerald-300 border border-emerald-500/30 mb-2.5 backdrop-blur-md">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-mono-tech bg-slate-900/80 text-emerald-300 border border-emerald-500/30 mb-2.5 backdrop-blur-md">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse mr-2"></span> ORBITAL TERMINAL • ACTIVE
             </span>
             <h1 class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-emerald-300 via-teal-300 to-cyan-300 bg-clip-text text-transparent">
                 AM Personal Generator
             </h1>
-            <p class="text-slate-400 text-[11px] mt-1">Seret logo 3D untuk menggeser • Klik 2x pada logo untuk menghancurkan</p>
+            <p class="text-slate-300/80 text-[11px] mt-1">Seret logo 3D untuk menggeser • Klik 2x pada logo untuk menghancurkan</p>
         </div>
 
         <!-- Console Card -->
@@ -329,7 +238,7 @@
         </div>
     </div>
 
-    <!-- MODAL POP-UP PEMBAYARAN SAWERIA (ORBITAL THEME) -->
+    <!-- MODAL POP-UP PEMBAYARAN SAWERIA -->
     <div id="paymentModal" style="display:none;" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm items-center justify-center p-4">
         <div class="control-panel rounded-2xl p-6 max-w-sm w-full text-center border border-emerald-500/40">
             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-mono-tech bg-amber-500/15 text-amber-300 border border-amber-500/30 mb-3">
@@ -338,10 +247,9 @@
             <h3 class="text-lg font-bold text-white mb-1">Pembayaran Diperlukan</h3>
             <p class="text-xs text-slate-300 mb-3">Email: <b id="modalUserEmail" class="text-emerald-300 font-mono-tech"></b></p>
             <p class="text-xs text-slate-400 leading-relaxed mb-5">
-                Lakukan pembayaran <b class="text-white">Rp 5.000</b> via QRIS / E-Wallet di Saweria. Pastikan mengisi <u class="text-emerald-300">email yang sama persis</u> pada kolom email Saweria.
+                Ketik nominal <b class="text-white">5000</b> secara manual di Saweria (pembayaran di bawah Rp 5.000 tidak diproses) dan isi <u class="text-emerald-300">email yang sama persis</u>.
             </p>
 
-            <!-- GANTI USERNAME_SAWERIA_KAMU DENGAN USERNAME SAWERIA MILIKMU -->
             <a id="saweriaLink" href="https://saweria.co/VoidEVO" target="_blank" rel="noreferrer noopener" class="interactive-btn block w-full py-3 px-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-bold rounded-xl text-sm mb-2.5 shadow-lg">
                 🚀 BAYAR Rp 5.000 SEKARANG
             </a>
@@ -357,6 +265,12 @@
     </div>
 
     <script>
+        // Pastikan video background langsung berputar di semua browser
+        const spaceVideo = document.getElementById('space-video');
+        if (spaceVideo) {
+            spaceVideo.play().catch(() => {});
+        }
+
         // =========================================================
         // 1. BUTTON CLICK RIPPLE & REAL API LOGIC
         // =========================================================
@@ -447,7 +361,6 @@
                 document.getElementById('step-loading').classList.add('hidden');
 
                 if (res.status === 403) {
-                    // Belum bayar -> kembali ke step 1 & munculkan pop-up pembayaran
                     document.getElementById('step-1').classList.remove('hidden');
                     showStatus(data.message || 'Email ini belum melakukan pembayaran Rp 5.000.');
                     showPaymentModal(userEmailInput);
@@ -528,171 +441,7 @@
         }
 
         // =========================================================
-        // 2. OUTER SPACE & PASSING ASTEROIDS ENGINE
-        // =========================================================
-        const spaceCanvas = document.getElementById('space-canvas');
-        const sCtx = spaceCanvas.getContext('2d');
-        let sWidth = 0, sHeight = 0;
-        let stars = [];
-        let asteroids = [];
-        let nextAsteroidTimer = 1.5;
-
-        function initSpace() {
-            const dpr = Math.min(window.devicePixelRatio || 1, 2);
-            sWidth = window.innerWidth;
-            sHeight = window.innerHeight;
-            spaceCanvas.width = sWidth * dpr;
-            spaceCanvas.height = sHeight * dpr;
-            sCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-            const starCount = Math.floor((sWidth * sHeight) / 6500);
-            stars = [];
-            for (let i = 0; i < starCount; i++) {
-                stars.push({
-                    x: Math.random() * sWidth,
-                    y: Math.random() * sHeight,
-                    r: Math.random() * 1.6 + 0.3,
-                    alpha: Math.random() * 0.8 + 0.2,
-                    twinkleSpeed: Math.random() * 2 + 0.5,
-                    phase: Math.random() * Math.PI * 2,
-                    tint: Math.random() > 0.82 ? '#99f6e4' : (Math.random() > 0.7 ? '#bae6fd' : '#ffffff')
-                });
-            }
-        }
-
-        function spawnAsteroid() {
-            const fromLeft = Math.random() > 0.5;
-            const radius = 16 + Math.random() * 34;
-            const startX = fromLeft ? -radius * 2.5 : sWidth + radius * 2.5;
-            const startY = sHeight * (0.1 + Math.random() * 0.75);
-            const speed = 55 + Math.random() * 95;
-            const angle = fromLeft
-                ? (Math.random() * 0.45 - 0.22)
-                : (Math.PI + (Math.random() * 0.45 - 0.22));
-
-            const vertices = [];
-            const pts = 11;
-            for (let i = 0; i < pts; i++) {
-                const a = (i / pts) * Math.PI * 2;
-                const dist = radius * (0.76 + Math.random() * 0.34);
-                vertices.push({ x: Math.cos(a) * dist, y: Math.sin(a) * dist });
-            }
-
-            const craters = [];
-            const craterCount = 3 + Math.floor(Math.random() * 3);
-            for (let c = 0; c < craterCount; c++) {
-                const ca = Math.random() * Math.PI * 2;
-                const cd = Math.random() * radius * 0.45;
-                craters.push({
-                    x: Math.cos(ca) * cd,
-                    y: Math.sin(ca) * cd,
-                    r: radius * (0.12 + Math.random() * 0.14)
-                });
-            }
-
-            asteroids.push({
-                x: startX,
-                y: startY,
-                vx: Math.cos(angle) * speed,
-                vy: Math.sin(angle) * speed,
-                radius: radius,
-                rot: Math.random() * Math.PI * 2,
-                rotSpeed: (Math.random() - 0.5) * 0.9,
-                vertices: vertices,
-                craters: craters
-            });
-        }
-
-        function renderSpace(dt, nowSec) {
-            const bg = sCtx.createRadialGradient(sWidth * 0.3, sHeight * 0.25, 40, sWidth * 0.5, sHeight * 0.5, Math.max(sWidth, sHeight) * 0.9);
-            bg.addColorStop(0, '#091326');
-            bg.addColorStop(0.5, '#040814');
-            bg.addColorStop(1, '#010206');
-            sCtx.fillStyle = bg;
-            sCtx.fillRect(0, 0, sWidth, sHeight);
-
-            const neb = sCtx.createRadialGradient(sWidth * 0.75, sHeight * 0.65, 10, sWidth * 0.75, sHeight * 0.65, sWidth * 0.4);
-            neb.addColorStop(0, 'rgba(13, 148, 136, 0.08)');
-            neb.addColorStop(1, 'transparent');
-            sCtx.fillStyle = neb;
-            sCtx.fillRect(0, 0, sWidth, sHeight);
-
-            for (let i = 0; i < stars.length; i++) {
-                const st = stars[i];
-                const flicker = 0.65 + 0.35 * Math.sin(nowSec * st.twinkleSpeed + st.phase);
-                sCtx.globalAlpha = st.alpha * flicker;
-                sCtx.fillStyle = st.tint;
-                sCtx.beginPath();
-                sCtx.arc(st.x, st.y, st.r, 0, Math.PI * 2);
-                sCtx.fill();
-            }
-            sCtx.globalAlpha = 1;
-
-            nextAsteroidTimer -= dt;
-            if (nextAsteroidTimer <= 0) {
-                spawnAsteroid();
-                nextAsteroidTimer = 3.5 + Math.random() * 4.5;
-            }
-
-            for (let i = asteroids.length - 1; i >= 0; i--) {
-                const ast = asteroids[i];
-                ast.x += ast.vx * dt;
-                ast.y += ast.vy * dt;
-                ast.rot += ast.rotSpeed * dt;
-
-                sCtx.save();
-                const tailX = ast.x - ast.vx * 0.9;
-                const tailY = ast.y - ast.vy * 0.9;
-                const trailGrad = sCtx.createLinearGradient(ast.x, ast.y, tailX, tailY);
-                trailGrad.addColorStop(0, 'rgba(148, 163, 184, 0.16)');
-                trailGrad.addColorStop(1, 'transparent');
-                sCtx.strokeStyle = trailGrad;
-                sCtx.lineWidth = ast.radius * 0.7;
-                sCtx.lineCap = 'round';
-                sCtx.beginPath();
-                sCtx.moveTo(ast.x, ast.y);
-                sCtx.lineTo(tailX, tailY);
-                sCtx.stroke();
-                sCtx.restore();
-
-                sCtx.save();
-                sCtx.translate(ast.x, ast.y);
-                sCtx.rotate(ast.rot);
-
-                sCtx.beginPath();
-                ast.vertices.forEach((v, idx) => {
-                    if (idx === 0) sCtx.moveTo(v.x, v.y);
-                    else sCtx.lineTo(v.x, v.y);
-                });
-                sCtx.closePath();
-
-                const rockGrad = sCtx.createRadialGradient(-ast.radius * 0.3, -ast.radius * 0.3, 2, 0, 0, ast.radius * 1.2);
-                rockGrad.addColorStop(0, '#64748b');
-                rockGrad.addColorStop(0.55, '#334155');
-                rockGrad.addColorStop(1, '#0f172a');
-                sCtx.fillStyle = rockGrad;
-                sCtx.fill();
-                sCtx.lineWidth = 1;
-                sCtx.strokeStyle = 'rgba(148, 163, 184, 0.25)';
-                sCtx.stroke();
-
-                ast.craters.forEach(c => {
-                    sCtx.beginPath();
-                    sCtx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
-                    sCtx.fillStyle = 'rgba(15, 23, 42, 0.55)';
-                    sCtx.fill();
-                });
-
-                sCtx.restore();
-
-                if (ast.x < -ast.radius * 4 || ast.x > sWidth + ast.radius * 4 || ast.y < -ast.radius * 4 || ast.y > sHeight + ast.radius * 4) {
-                    asteroids.splice(i, 1);
-                }
-            }
-        }
-
-        // =========================================================
-        // 3. 3D ALIGHT MOTION LOGO (3-SWIRL SPIRAL ICON)
+        // 2. 3D ALIGHT MOTION LOGO (NATURAL 3D SPIN & BOBBING)
         // =========================================================
         const logoCanvas = document.getElementById('logo-canvas');
         const lCtx = logoCanvas.getContext('2d');
@@ -703,15 +452,12 @@
         const logo = {
             x: 0,
             y: 0,
-            vx: 155,
-            vy: 120,
-            radius: 46,
-            rotX: 0.2,
+            vx: 145,
+            vy: 115,
+            radius: 44,
             rotY: 0.3,
-            rotZ: 0,
-            vRotX: 0.85,
-            vRotY: 1.35,
-            vRotZ: 0.35,
+            vRotY: 1.15,
+            bobPhase: 0,
             state: 'floating',
             respawnTimer: 0,
             enterProgress: 0,
@@ -722,8 +468,9 @@
         let dustParticles = [];
         let bounceSparks = [];
 
+        // Pantul tepat di tepi layar penuh (tanpa bingkai besi)
         function getWallBounds() {
-            const pad = (window.innerWidth < 640 ? 18 : 26) + logo.radius + 4;
+            const pad = logo.radius + 2;
             return {
                 left: pad,
                 right: Math.max(pad + 50, lWidth - pad),
@@ -740,10 +487,10 @@
             logoCanvas.height = lHeight * dpr;
             lCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-            logo.radius = lWidth < 640 ? 40 : 48;
+            logo.radius = lWidth < 640 ? 38 : 46;
             if (logo.x === 0 && logo.y === 0) {
-                logo.x = lWidth * 0.25;
-                logo.y = lHeight * 0.28;
+                logo.x = lWidth * 0.22;
+                logo.y = lHeight * 0.25;
             }
         }
 
@@ -796,11 +543,9 @@
             logo.enterSide = Math.random() > 0.5 ? 'right' : 'left';
             const bounds = getWallBounds();
             logo.y = bounds.top + (bounds.bottom - bounds.top) * (0.25 + Math.random() * 0.5);
-            logo.x = logo.enterSide === 'right' ? lWidth - 22 : 22;
+            logo.x = logo.enterSide === 'right' ? lWidth : 0;
             logo.scale = 0.25;
-            logo.rotX = 0.15;
             logo.rotY = logo.enterSide === 'right' ? -0.9 : 0.9;
-            logo.rotZ = 0;
         }
 
         function drawRoundedBox(ctx, size, cornerR) {
@@ -857,49 +602,8 @@
             ctx.fill();
         }
 
-        function draw3DAlightMotionLogo(ctx, x, y, radius, rx, ry, rz, scale) {
-            ctx.save();
-            ctx.translate(x, y);
-            ctx.scale(scale, scale);
-
-            const aura = ctx.createRadialGradient(0, 0, radius * 0.2, 0, 0, radius * 1.65);
-            aura.addColorStop(0, 'rgba(14, 245, 154, 0.26)');
-            aura.addColorStop(0.6, 'rgba(16, 185, 129, 0.08)');
-            aura.addColorStop(1, 'transparent');
-            ctx.fillStyle = aura;
-            ctx.beginPath();
-            ctx.arc(0, 0, radius * 1.65, 0, Math.PI * 2);
-            ctx.fill();
-
-            const tiltX = Math.sin(ry) * 0.42;
-            const tiltY = Math.sin(rx) * 0.42;
-            const squeezeX = Math.max(0.58, Math.cos(ry * 0.72));
-            const squeezeY = Math.max(0.58, Math.cos(rx * 0.72));
-
-            ctx.rotate(rz);
-
-            const boxSize = radius * 1.72;
-            const cornerR = radius * 0.42;
-
-            const depthLayers = 11;
-            const depthOffsetX = -tiltX * 18;
-            const depthOffsetY = -tiltY * 18;
-
-            for (let d = depthLayers; d >= 1; d--) {
-                const ratio = d / depthLayers;
-                ctx.save();
-                ctx.translate(depthOffsetX * ratio, depthOffsetY * ratio);
-                ctx.scale(squeezeX, squeezeY);
-
-                drawRoundedBox(ctx, boxSize, cornerR);
-                ctx.fillStyle = d === depthLayers ? '#050a14' : (d % 2 === 0 ? '#0c192c' : '#11223b');
-                ctx.fill();
-                ctx.restore();
-            }
-
-            ctx.save();
-            ctx.scale(squeezeX, squeezeY);
-
+        // Gambar satu sisi penuh ikon Alight Motion (normal & tidak meregang)
+        function drawAlightMotionFace(ctx, radius, boxSize, cornerR) {
             drawRoundedBox(ctx, boxSize, cornerR);
             const iconBg = ctx.createRadialGradient(
                 boxSize * 0.25, -boxSize * 0.25, boxSize * 0.05,
@@ -919,51 +623,109 @@
             ctx.strokeStyle = rimGrad;
             ctx.stroke();
 
-            const swirlLiftX = tiltX * 4.5;
-            const swirlLiftY = tiltY * 4.5;
-            const swirlCenterX = swirlLiftX;
-            const swirlCenterY = radius * 0.04 + swirlLiftY;
+            const swirlCenterY = radius * 0.04;
 
+            // Bayangan halus logo di atas tile
             ctx.save();
-            ctx.translate(-swirlLiftX * 0.6 + 1.5, -swirlLiftY * 0.6 + 2.5);
-            ctx.fillStyle = 'rgba(2, 6, 18, 0.65)';
-            drawTaperedArc(ctx, 0, radius * 0.04, radius * 0.58, 192, 370, radius * 0.115);
-            drawTaperedArc(ctx, 0, radius * 0.04, radius * 0.42, 224, 415, radius * 0.112);
-            drawTaperedArc(ctx, 0, radius * 0.04, radius * 0.26, 256, 524, radius * 0.108);
+            ctx.translate(1.5, 2.5);
+            ctx.fillStyle = 'rgba(2, 6, 18, 0.6)';
+            drawTaperedArc(ctx, 0, swirlCenterY, radius * 0.58, 192, 370, radius * 0.115);
+            drawTaperedArc(ctx, 0, swirlCenterY, radius * 0.42, 224, 415, radius * 0.112);
+            drawTaperedArc(ctx, 0, swirlCenterY, radius * 0.26, 256, 524, radius * 0.108);
             ctx.restore();
 
+            // Tiga lengkungan spiral hijau mint Alight Motion
             const mintGrad = ctx.createLinearGradient(-radius * 0.6, -radius * 0.6, radius * 0.6, radius * 0.6);
             mintGrad.addColorStop(0, '#4ade80');
             mintGrad.addColorStop(0.45, '#0ef59a');
             mintGrad.addColorStop(1, '#00d684');
 
             ctx.fillStyle = mintGrad;
-            ctx.shadowColor = 'rgba(14, 245, 154, 0.55)';
+            ctx.shadowColor = 'rgba(14, 245, 154, 0.5)';
             ctx.shadowBlur = 10;
 
-            drawTaperedArc(ctx, swirlCenterX, swirlCenterY, radius * 0.58, 192, 370, radius * 0.115);
-            drawTaperedArc(ctx, swirlCenterX, swirlCenterY, radius * 0.42, 224, 415, radius * 0.112);
-            drawTaperedArc(ctx, swirlCenterX, swirlCenterY, radius * 0.26, 256, 524, radius * 0.108);
+            drawTaperedArc(ctx, 0, swirlCenterY, radius * 0.58, 192, 370, radius * 0.115);
+            drawTaperedArc(ctx, 0, swirlCenterY, radius * 0.42, 224, 415, radius * 0.112);
+            drawTaperedArc(ctx, 0, swirlCenterY, radius * 0.26, 256, 524, radius * 0.108);
 
             ctx.shadowBlur = 0;
 
+            // Kilau kaca tipis di permukaan depan & belakang
             drawRoundedBox(ctx, boxSize - 2, cornerR - 1);
             const sheen = ctx.createLinearGradient(-boxSize / 2, -boxSize / 2, boxSize * 0.35, boxSize * 0.35);
-            sheen.addColorStop(0, 'rgba(255, 255, 255, 0.22)');
+            sheen.addColorStop(0, 'rgba(255, 255, 255, 0.2)');
             sheen.addColorStop(0.42, 'rgba(255, 255, 255, 0.02)');
             sheen.addColorStop(1, 'transparent');
             ctx.fillStyle = sheen;
             ctx.fill();
+        }
 
-            ctx.restore();
+        // Render Koin/Tile 3D Alight Motion: Depan & Belakang Sama Persis, Berputar & Terombang-ambing Alami
+        function draw3DAlightMotionLogo(ctx, x, y, radius, ry, bobPhase, scale) {
+            ctx.save();
+
+            // Gerakan mengapung terombang-ambing lembut (vertikal & kemiringan alami)
+            const floatBobY = Math.sin(bobPhase * 1.8) * 5.5;
+            const swayRoll = Math.sin(bobPhase * 1.25) * 0.16 + Math.cos(bobPhase * 0.75) * 0.07;
+
+            ctx.translate(x, y + floatBobY);
+            ctx.scale(scale, scale);
+
+            // Aura cahaya lembut di sekitar logo
+            const aura = ctx.createRadialGradient(0, 0, radius * 0.2, 0, 0, radius * 1.6);
+            aura.addColorStop(0, 'rgba(14, 245, 154, 0.24)');
+            aura.addColorStop(0.6, 'rgba(16, 185, 129, 0.07)');
+            aura.addColorStop(1, 'transparent');
+            ctx.fillStyle = aura;
+            ctx.beginPath();
+            ctx.arc(0, 0, radius * 1.6, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.rotate(swayRoll);
+
+            const boxSize = radius * 1.68;
+            const cornerR = radius * 0.4;
+            const thickness = 11;
+
+            const cosY = Math.cos(ry);
+            const sinY = Math.sin(ry);
+            const absCosY = Math.abs(cosY);
+
+            // Sisi mana pun yang menghadap ke depan (depan atau belakang) tampil identik
+            const frontOffset = (cosY >= 0 ? 1 : -1) * (thickness * 0.5) * sinY;
+            const backOffset = -frontOffset;
+
+            // 1. Gambar ketebalan sisi 3D (terlihat mulus saat berputar ke samping)
+            const edgeSteps = 10;
+            for (let i = 0; i <= edgeSteps; i++) {
+                const t = i / edgeSteps;
+                const sliceX = backOffset + (frontOffset - backOffset) * t;
+                ctx.save();
+                ctx.translate(sliceX, 0);
+                ctx.scale(Math.max(0.015, absCosY), 1);
+                drawRoundedBox(ctx, boxSize, cornerR);
+                ctx.fillStyle = i === Math.floor(edgeSteps / 2) ? '#10b981' : (i % 2 === 0 ? '#0c192c' : '#162945');
+                ctx.fill();
+                ctx.restore();
+            }
+
+            // 2. Gambar permukaan wajah ikon (sama persis di sisi depan maupun sisi belakang)
+            if (absCosY > 0.01) {
+                ctx.save();
+                ctx.translate(frontOffset, 0);
+                ctx.scale(absCosY, 1);
+                drawAlightMotionFace(ctx, radius, boxSize, cornerR);
+                ctx.restore();
+            }
+
             ctx.restore();
         }
 
-        function drawAirlockPortal(ctx, side, y, progress) {
+        function drawPortalEdge(ctx, side, y, progress) {
             const doorAlpha = Math.sin(progress * Math.PI);
             if (doorAlpha <= 0.01) return;
 
-            const wallX = side === 'right' ? lWidth - (lWidth < 640 ? 18 : 26) : (lWidth < 640 ? 18 : 26);
+            const wallX = side === 'right' ? lWidth : 0;
             const dir = side === 'right' ? -1 : 1;
             const doorHeight = 135 * doorAlpha;
 
@@ -981,18 +743,11 @@
             ctx.lineTo(wallX, y + doorHeight * 0.5);
             ctx.closePath();
             ctx.fill();
-
-            ctx.strokeStyle = `rgba(110, 231, 183, ${0.95 * doorAlpha})`;
-            ctx.lineWidth = 4;
-            ctx.beginPath();
-            ctx.moveTo(wallX, y - doorHeight * 0.5);
-            ctx.lineTo(wallX, y + doorHeight * 0.5);
-            ctx.stroke();
             ctx.restore();
         }
 
         // =========================================================
-        // 4. POINTER INTERACTION (DRAG & DOUBLE-CLICK ON 3D LOGO)
+        // 3. POINTER INTERACTION (DRAG & DOUBLE-CLICK ON 3D LOGO)
         // =========================================================
         let isDragging = false;
         let dragOffsetX = 0;
@@ -1004,7 +759,7 @@
 
         function isPointerOnLogo(clientX, clientY) {
             if (logo.state !== 'floating' && logo.state !== 'dragging') return false;
-            return Math.hypot(clientX - logo.x, clientY - logo.y) <= logo.radius * 1.2;
+            return Math.hypot(clientX - logo.x, clientY - logo.y) <= logo.radius * 1.25;
         }
 
         window.addEventListener('pointermove', (e) => {
@@ -1020,9 +775,7 @@
 
                 logo.vx = (clampedX - lastDragX) / dt * 0.65;
                 logo.vy = (clampedY - lastDragY) / dt * 0.65;
-
-                logo.rotY += (clampedX - logo.x) * 0.025;
-                logo.rotX -= (clampedY - logo.y) * 0.025;
+                logo.rotY += (clampedX - logo.x) * 0.03;
 
                 logo.x = clampedX;
                 logo.y = clampedY;
@@ -1070,16 +823,16 @@
             const speed = Math.hypot(logo.vx, logo.vy);
             if (speed < 60) {
                 const a = Math.random() * Math.PI * 2;
-                logo.vx = Math.cos(a) * 145;
-                logo.vy = Math.sin(a) * 125;
-            } else if (speed > 550) {
-                logo.vx = (logo.vx / speed) * 550;
-                logo.vy = (logo.vy / speed) * 550;
+                logo.vx = Math.cos(a) * 140;
+                logo.vy = Math.sin(a) * 120;
+            } else if (speed > 520) {
+                logo.vx = (logo.vx / speed) * 520;
+                logo.vy = (logo.vy / speed) * 520;
             }
         });
 
         // =========================================================
-        // 5. MAIN ANIMATION LOOP
+        // 4. MAIN ANIMATION LOOP
         // =========================================================
         let lastFrameTime = performance.now();
 
@@ -1088,58 +841,44 @@
             lastFrameTime = now;
             const nowSec = now / 1000;
 
-            renderSpace(dt, nowSec);
-
             lCtx.clearRect(0, 0, lWidth, lHeight);
             const bounds = getWallBounds();
+
+            logo.bobPhase += dt;
 
             if (logo.state === 'floating') {
                 hudStatus.innerText = 'CORE: FLOATING';
                 logo.x += logo.vx * dt;
                 logo.y += logo.vy * dt;
-
-                logo.rotX += logo.vRotX * dt;
                 logo.rotY += logo.vRotY * dt;
-                logo.rotZ += logo.vRotZ * dt;
 
-                let bounced = false;
                 if (logo.x <= bounds.left) {
                     logo.x = bounds.left;
                     logo.vx = Math.abs(logo.vx);
-                    logo.vRotY = -logo.vRotY;
-                    spawnBounceSpark(logo.x - logo.radius, logo.y);
-                    bounced = true;
+                    logo.vRotY = Math.abs(logo.vRotY);
+                    spawnBounceSpark(0, logo.y);
                 } else if (logo.x >= bounds.right) {
                     logo.x = bounds.right;
                     logo.vx = -Math.abs(logo.vx);
-                    logo.vRotY = -logo.vRotY;
-                    spawnBounceSpark(logo.x + logo.radius, logo.y);
-                    bounced = true;
+                    logo.vRotY = -Math.abs(logo.vRotY);
+                    spawnBounceSpark(lWidth, logo.y);
                 }
 
                 if (logo.y <= bounds.top) {
                     logo.y = bounds.top;
                     logo.vy = Math.abs(logo.vy);
-                    logo.vRotX = -logo.vRotX;
-                    spawnBounceSpark(logo.x, logo.y - logo.radius);
-                    bounced = true;
+                    spawnBounceSpark(logo.x, 0);
                 } else if (logo.y >= bounds.bottom) {
                     logo.y = bounds.bottom;
                     logo.vy = -Math.abs(logo.vy);
-                    logo.vRotX = -logo.vRotX;
-                    spawnBounceSpark(logo.x, logo.y + logo.radius);
-                    bounced = true;
+                    spawnBounceSpark(logo.x, lHeight);
                 }
 
-                if (bounced) {
-                    logo.vRotZ = (Math.random() - 0.5) * 1.4;
-                }
-
-                draw3DAlightMotionLogo(lCtx, logo.x, logo.y, logo.radius, logo.rotX, logo.rotY, logo.rotZ, 1);
+                draw3DAlightMotionLogo(lCtx, logo.x, logo.y, logo.radius, logo.rotY, logo.bobPhase, 1);
 
             } else if (logo.state === 'dragging') {
                 hudStatus.innerText = 'CORE: MANUAL LOCK';
-                draw3DAlightMotionLogo(lCtx, logo.x, logo.y, logo.radius, logo.rotX, logo.rotY, logo.rotZ, 1.08);
+                draw3DAlightMotionLogo(lCtx, logo.x, logo.y, logo.radius, logo.rotY, logo.bobPhase, 1.06);
 
             } else if (logo.state === 'shattered') {
                 logo.respawnTimer -= dt;
@@ -1150,7 +889,7 @@
                 }
 
             } else if (logo.state === 'entering') {
-                hudStatus.innerText = 'CORE: AIRLOCK TRANSFER';
+                hudStatus.innerText = 'CORE: ENTERING ORBIT';
                 logo.enterProgress += dt / 1.35;
 
                 if (logo.enterProgress >= 1) {
@@ -1158,22 +897,23 @@
                     logo.state = 'floating';
                     logo.scale = 1;
                     const dir = logo.enterSide === 'right' ? -1 : 1;
-                    logo.vx = dir * (150 + Math.random() * 40);
-                    logo.vy = (Math.random() > 0.5 ? 1 : -1) * (110 + Math.random() * 40);
+                    logo.vx = dir * (145 + Math.random() * 35);
+                    logo.vy = (Math.random() > 0.5 ? 1 : -1) * (110 + Math.random() * 35);
                 } else {
                     const ease = 1 - Math.pow(1 - logo.enterProgress, 3);
-                    const startX = logo.enterSide === 'right' ? lWidth - 20 : 20;
+                    const startX = logo.enterSide === 'right' ? lWidth : 0;
                     const targetX = logo.enterSide === 'right' ? bounds.right - 65 : bounds.left + 65;
 
                     logo.x = startX + (targetX - startX) * ease;
                     logo.scale = 0.25 + 0.75 * ease;
                     logo.rotY = (logo.enterSide === 'right' ? -1.1 : 1.1) * (1 - ease);
 
-                    drawAirlockPortal(lCtx, logo.enterSide, logo.y, logo.enterProgress);
-                    draw3DAlightMotionLogo(lCtx, logo.x, logo.y, logo.radius, logo.rotX, logo.rotY, logo.rotZ, logo.scale);
+                    drawPortalEdge(lCtx, logo.enterSide, logo.y, logo.enterProgress);
+                    draw3DAlightMotionLogo(lCtx, logo.x, logo.y, logo.radius, logo.rotY, logo.bobPhase, logo.scale);
                 }
             }
 
+            // Render Zero-G Dust Particles
             for (let i = dustParticles.length - 1; i >= 0; i--) {
                 const p = dustParticles[i];
                 p.life -= dt;
@@ -1195,6 +935,7 @@
             }
             lCtx.globalAlpha = 1;
 
+            // Render Edge Bounce Sparks
             for (let i = bounceSparks.length - 1; i >= 0; i--) {
                 const sp = bounceSparks[i];
                 sp.life -= dt;
@@ -1215,12 +956,8 @@
             requestAnimationFrame(mainLoop);
         }
 
-        window.addEventListener('resize', () => {
-            initSpace();
-            initLogoCanvas();
-        });
+        window.addEventListener('resize', initLogoCanvas);
 
-        initSpace();
         initLogoCanvas();
         requestAnimationFrame(mainLoop);
     </script>
