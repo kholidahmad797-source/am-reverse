@@ -198,14 +198,14 @@
             <!-- Notifikasi Error / Status API -->
             <div id="status-banner" class="hidden mb-4 px-3.5 py-2.5 rounded-xl text-xs font-mono-tech border"></div>
 
-            <!-- STEP 1: Input Email -->
+            <!-- STEP 1: Input Email (GRATIS) -->
             <div id="step-1" class="space-y-4">
                 <div>
                     <label class="block text-[11px] font-mono-tech uppercase tracking-wider text-slate-400 mb-2">Email Akun Alight Motion</label>
                     <input type="email" id="user-email" placeholder="masukkan.email@gmail.com" class="w-full px-4 py-3 rounded-xl bg-slate-950/70 border border-slate-700/70 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400 transition text-sm select-text">
                 </div>
                 <button id="btn-start" onclick="startProcess()" class="interactive-btn w-full py-3.5 px-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold rounded-xl flex items-center justify-center space-x-2 text-sm cursor-pointer shadow-lg">
-                    <span class="relative z-10">Mulai Proses</span>
+                    <span class="relative z-10">Kirim Link ke Email (Gratis)</span>
                     <svg class="w-4 h-4 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                 </button>
             </div>
@@ -217,14 +217,14 @@
                 <p id="loading-text" class="text-xs text-slate-400">Menghubungi server aktivasi...</p>
             </div>
 
-            <!-- STEP 3: Input Link -->
+            <!-- STEP 3: Input Link & Verifikasi (WAJIB BAYAR Rp 5.000) -->
             <div id="step-verify" class="hidden space-y-4">
                 <div class="bg-emerald-950/45 border border-emerald-500/30 rounded-xl p-3 text-xs text-emerald-100">
-                    <p class="font-bold mb-1 text-emerald-300">Langkah Verifikasi:</p>
+                    <p class="font-bold mb-1 text-emerald-300">Langkah Verifikasi & Pembayaran:</p>
                     <ol class="list-decimal list-inside space-y-1 text-slate-300 text-[11px]">
                         <li>Buka inbox: <span id="display-email" class="text-white font-semibold underline"></span></li>
                         <li>Salin tautan login dari <b>Alight Creative</b>.</li>
-                        <li>Tempelkan pada kolom di bawah ini.</li>
+                        <li>Tempelkan tautan di bawah lalu tekan <b>Proses Tautan</b> (Rp 5.000).</li>
                     </ol>
                 </div>
 
@@ -266,16 +266,16 @@
         </div>
     </div>
 
-    <!-- MODAL POP-UP PEMBAYARAN SAWERIA -->
+    <!-- MODAL POP-UP PEMBAYARAN SAWERIA (MUNCUL SAAT PROSES TAUTAN) -->
     <div id="paymentModal" style="display:none;" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm items-center justify-center p-4">
         <div class="control-panel rounded-2xl p-6 max-w-sm w-full text-center border border-emerald-500/40">
             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-mono-tech bg-amber-500/15 text-amber-300 border border-amber-500/30 mb-3">
-                ACCESS LOCKED • Rp 5.000
+                VERIFIKASI TAUTAN • Rp 5.000
             </span>
-            <h3 class="text-lg font-bold text-white mb-1">Pembayaran Diperlukan</h3>
+            <h3 class="text-lg font-bold text-white mb-1">Selesaikan Pembayaran</h3>
             <p class="text-xs text-slate-300 mb-3">Email: <b id="modalUserEmail" class="text-emerald-300 font-mono-tech"></b></p>
             <p class="text-xs text-slate-400 leading-relaxed mb-5">
-                Ketik nominal <b class="text-white">5000</b> secara manual di Saweria (pembayaran di bawah Rp 5.000 tidak diproses) dan isi <u class="text-emerald-300">email yang sama persis</u>.
+                Tautan sudah siap diproses. Ketik nominal <b class="text-white">5000</b> secara manual di Saweria (di bawah Rp 5.000 tidak diproses) dan isi <u class="text-emerald-300">email yang sama persis</u>.
             </p>
 
             <a id="saweriaLink" href="https://saweria.co/VoidEVO" target="_blank" rel="noreferrer noopener" class="interactive-btn block w-full py-3 px-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-bold rounded-xl text-sm mb-2.5 shadow-lg">
@@ -283,7 +283,7 @@
             </a>
 
             <button onclick="retryActivation()" class="interactive-btn w-full py-2.5 px-4 bg-slate-800/90 hover:bg-slate-700 text-white border border-slate-600/60 font-semibold rounded-xl text-xs mb-3 cursor-pointer">
-                ✅ Saya Sudah Bayar (Cek Ulang)
+                ✅ Saya Sudah Bayar (Proses Tautan)
             </button>
 
             <button onclick="closePaymentModal()" class="text-xs text-slate-400 hover:text-white underline cursor-pointer bg-transparent border-none">
@@ -359,11 +359,13 @@
             document.getElementById('paymentModal').style.display = 'none';
         }
 
+        // Lanjutkan verifikasi tautan setelah pembeli selesai membayar di Saweria
         function retryActivation() {
             closePaymentModal();
-            startProcess();
+            processActivation();
         }
 
+        // TAHAP 1: Kirim Link ke Email (GRATIS)
         async function startProcess() {
             hideStatus();
             const email = document.getElementById('user-email').value.trim();
@@ -375,7 +377,7 @@
 
             document.getElementById('step-1').classList.add('hidden');
             document.getElementById('step-loading').classList.remove('hidden');
-            document.getElementById('loading-text').innerText = "Memeriksa status pembayaran & mengirim link...";
+            document.getElementById('loading-text').innerText = "Mengirim tautan login Alight Creative ke email...";
 
             try {
                 const res = await fetch('/api/send-link', {
@@ -387,15 +389,8 @@
 
                 document.getElementById('step-loading').classList.add('hidden');
 
-                if (res.status === 403) {
-                    document.getElementById('step-1').classList.remove('hidden');
-                    showStatus(data.message || 'Email ini belum melakukan pembayaran Rp 5.000.');
-                    showPaymentModal(userEmailInput);
-                    return;
-                }
-
                 if (data.success) {
-                    showStatus('Link login terkirim! Silakan cek inbox/spam email Anda.', true);
+                    showStatus('Link login terkirim gratis! Silakan cek inbox/spam email Anda.', true);
                     document.getElementById('step-verify').classList.remove('hidden');
                     document.getElementById('display-email').innerText = userEmailInput;
                 } else {
@@ -409,6 +404,7 @@
             }
         }
 
+        // TAHAP 2: Verifikasi Link & Generate Token (WAJIB BAYAR Rp 5.000)
         async function processActivation() {
             hideStatus();
             const link = document.getElementById('activation-link').value.trim();
@@ -417,15 +413,18 @@
                 return;
             }
 
+            const activeEmail = userEmailInput || document.getElementById('user-email').value.trim();
+            userEmailInput = activeEmail;
+
             document.getElementById('step-verify').classList.add('hidden');
             document.getElementById('step-loading').classList.remove('hidden');
-            document.getElementById('loading-text').innerText = "Memverifikasi tautan & membuat token...";
+            document.getElementById('loading-text').innerText = "Memeriksa pembayaran & memverifikasi tautan...";
 
             try {
                 const res = await fetch('/api/verify-link', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ link: link, email: userEmailInput })
+                    body: JSON.stringify({ link: link, email: activeEmail })
                 });
                 const data = await res.json();
 
@@ -433,14 +432,14 @@
 
                 if (res.status === 403) {
                     document.getElementById('step-verify').classList.remove('hidden');
-                    showStatus(data.message || 'Akses ditolak: Silakan bayar Rp 5.000 terlebih dahulu.');
-                    showPaymentModal(userEmailInput);
+                    showStatus(data.message || 'Silakan bayar Rp 5.000 terlebih dahulu untuk memproses tautan.');
+                    showPaymentModal(activeEmail);
                     return;
                 }
 
                 if (data.success) {
                     const d = data.data || {};
-                    document.getElementById('res-email').textContent = d.email || userEmailInput;
+                    document.getElementById('res-email').textContent = d.email || activeEmail;
                     document.getElementById('res-uid').textContent = d.uid || '-';
                     document.getElementById('res-order').textContent = d.orderId || '-';
                     document.getElementById('res-token').textContent = d.idToken || JSON.stringify(d);
@@ -855,7 +854,6 @@
             syncGrabZone();
         }
 
-        // Pointer Events langsung pada grabZone (dengan Pointer Capture)
         grabZone.addEventListener('pointerdown', (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -882,7 +880,6 @@
 
         grabZone.addEventListener('pointercancel', endDrag);
 
-        // Touch Events langsung pada grabZone untuk kompatibilitas penuh browser HP Android/iOS
         grabZone.addEventListener('touchstart', (e) => {
             if (e.touches.length === 0) return;
             e.preventDefault();
