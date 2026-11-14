@@ -223,19 +223,25 @@
                     <p class="font-bold mb-1 text-emerald-300">Langkah Verifikasi & Pembayaran:</p>
                     <ol class="list-decimal list-inside space-y-1 text-slate-300 text-[11px]">
                         <li>Buka inbox: <span id="display-email" class="text-white font-semibold underline"></span></li>
-                        <li>Salin tautan login dari <b>Alight Creative</b>.</li>
+                        <li><b class="text-amber-300">JANGAN DIKLIK/DIBUKA!</b> Klik kanan (PC) atau tekan tahan (HP) pada tautan dari <b>Alight Creative</b> &rarr; pilih <b>Salin Alamat Tautan</b>.</li>
                         <li>Tempelkan tautan di bawah lalu tekan <b>Proses Tautan</b> (Rp 5.000).</li>
                     </ol>
                 </div>
 
                 <div>
                     <label class="block text-[11px] font-mono-tech uppercase tracking-wider text-slate-400 mb-2">Tempel Link dari Email</label>
-                    <textarea id="activation-link" rows="2" placeholder="https://alightcreative.com/verify/..." class="w-full px-4 py-2.5 rounded-xl bg-slate-950/70 border border-slate-700/70 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400 transition text-xs select-text"></textarea>
+                    <textarea id="activation-link" rows="2" placeholder="https://alight-creative.firebaseapp.com/__/auth/links?..." class="w-full px-4 py-2.5 rounded-xl bg-slate-950/70 border border-slate-700/70 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400 transition text-xs select-text"></textarea>
                 </div>
 
-                <button onclick="processActivation()" class="interactive-btn w-full py-3.5 px-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold rounded-xl text-sm cursor-pointer shadow-lg">
-                    <span class="relative z-10">Proses Tautan</span>
-                </button>
+                <div class="space-y-2">
+                    <button onclick="processActivation()" class="interactive-btn w-full py-3.5 px-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold rounded-xl text-sm cursor-pointer shadow-lg">
+                        <span class="relative z-10">Proses Tautan</span>
+                    </button>
+
+                    <button onclick="resendMagicLink()" class="w-full py-2 px-3 bg-slate-900/80 hover:bg-slate-800 border border-slate-700/70 text-slate-300 hover:text-white rounded-xl text-[11px] font-mono-tech cursor-pointer transition">
+                        ↻ Kirim Ulang Link Baru ke Email
+                    </button>
+                </div>
             </div>
 
             <!-- STEP 4: Selesai & Token -->
@@ -359,10 +365,23 @@
             document.getElementById('paymentModal').style.display = 'none';
         }
 
-        // Lanjutkan verifikasi tautan setelah pembeli selesai membayar di Saweria
         function retryActivation() {
             closePaymentModal();
             processActivation();
+        }
+
+        // Kirim ulang link baru jika link sebelumnya terlanjur terklik/kedaluwarsa
+        async function resendMagicLink() {
+            const targetEmail = userEmailInput || document.getElementById('user-email').value.trim();
+            if (!targetEmail) {
+                document.getElementById('step-verify').classList.add('hidden');
+                document.getElementById('step-1').classList.remove('hidden');
+                return;
+            }
+            document.getElementById('activation-link').value = "";
+            document.getElementById('user-email').value = targetEmail;
+            document.getElementById('step-verify').classList.add('hidden');
+            await startProcess();
         }
 
         // TAHAP 1: Kirim Link ke Email (GRATIS)
@@ -390,7 +409,7 @@
                 document.getElementById('step-loading').classList.add('hidden');
 
                 if (data.success) {
-                    showStatus('Link login terkirim gratis! Silakan cek inbox/spam email Anda.', true);
+                    showStatus('Link login terkirim! Salin alamat tautannya tanpa membuka link.', true);
                     document.getElementById('step-verify').classList.remove('hidden');
                     document.getElementById('display-email').innerText = userEmailInput;
                 } else {
